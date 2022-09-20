@@ -1,0 +1,23 @@
+# Exclude everything
+**
+
+# Except package dirs, run.py, poetry files, tests, .pre-commit-config, .git and README
+!pyproject.toml
+!poetry.lock
+!run.py
+!manifest.json
+!fw_gear_bids_qsiprep
+!utils
+!.pre-commit-config.yaml
+!.env
+!.git
+!README.md
+!requirements.txt
+
+
+# Re-ignore pycache which might be inside package dir
+**/__pycache__
+#
+## Ignore the "assets" or "data" folder that might be inside "tests"
+#tests/assets
+#tests/data

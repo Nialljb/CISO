@@ -1,0 +1,15 @@
+repos:
+  - repo: https://gitlab.com/flywheel-io/tools/etc/qa-ci
+    rev: 94658e7fcd524814fbbd6a00222316e28a92e5ae
+    hooks:
+      - id: poetry_export
+      - id: docker_build
+      - id: markdownlint
+      - id: yamllint
+      - id: black
+      - id: isort
+      - id: pytest
+  - repo: https://gitlab.com/flywheel-io/scientific-solutions/etc/sse-qa-ci
+    rev: 879de9565ef98c178dad6c3426ddf033a46fc654
+    hooks:
+      - id: validate-manifest
