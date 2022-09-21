@@ -197,13 +197,13 @@ detected. Set this to run even if BIDS errors are detected.
   * **Name**: gear-run-bids-validation
   * **Type**: boolean
   * **Description**: Gear will run BIDS validation after downloading data.  If
-validation fails `hype-iso` will NOT be run.
+validation fails `ciso` will NOT be run.
   * **Optional**: true
 
 * gear-save-intermediate-output
   * **Name**: gear-save-intermediate-output
   * **Type**: boolean
-  * **Description**: Gear will save ALL intermediate output into `hype-iso_work.zip`.
+  * **Description**: Gear will save ALL intermediate output into `ciso_work.zip`.
   * **Optional**: true
 
 * gear-intermediate-files
@@ -223,7 +223,7 @@ directory.
 * gear-dry-run
   * **Name**: gear-dry-run
   * **Type**: boolean
-  * **Description**: Do everything except actually executing `hype-iso`.
+  * **Description**: Do everything except actually executing `ciso`.
   * **Optional**: true
 
 * gear-keep-output
@@ -271,7 +271,7 @@ it does, but HOW it works in flywheel
 
 This gear is run at either the `Subject` or the `Session` level. It downloads the data
 for that subject/session into the `/flwyhweel/v0/work/bids` folder and then runs the
-`hype-iso` pipeline on it.
+`ciso` pipeline on it.
 
 After the pipeline is run, the output folder is zipped and saved into the analysis
 container.
@@ -292,7 +292,7 @@ A picture and description of the workflow
     FC((file-classifier)):::gear --> D2N;
     D2N((dcm2niix)):::gear --> CB;
     CB((curate-bids)):::gear --> BQP;
-    BQP((bids-hype-iso)):::gear --> ANA;
+    BQP((bids-ciso)):::gear --> ANA;
     ANA[Analysis]:::container;
     
     classDef container fill:#57d,color:#fff
@@ -310,7 +310,7 @@ Description of workflow
    4. MRIQC (optional)
    5. curate bids
 3. Select either a subject or a session.
-4. Run the bids-hype-iso gear
+4. Run the bids-ciso gear
 5. Gear places output in Analysis
 
 ### Use Cases

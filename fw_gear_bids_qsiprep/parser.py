@@ -123,64 +123,36 @@ def parse_config(
         "bids_app_args",
         "interactive-reports-only",
         "acquisition_type",
-        "anat-only",
-        "dwi-only",
         "infant",
         "boilerplate",
         "verbose",
         "longitudinal",
-        "b0-threshold",
-        "dwi_denoise_window",
-        "denoise-method",
-        "unringing-method",
-        "dwi-no-biascorr",
-        "no-b0-harmonization",
-        "denoise-after-combining",
-        "separate_all_dwis",
-        "distortion-group-merge",
-        "write-local-bvecs",
-        "output-space",
-        "template",
-        "output-resolution",
-        "b0-to-t1w-transform",
-        "intramodal-template-iters",
-        "intramodal-template-transform",
-        "b0-motion-corr-to",
-        "hmc-transform",
-        "hmc_model",
-        "shoreline_iters",
-        "impute-slice-threshold",
-        "skull-strip-template",
-        "skull-strip-fixed-seed",
-        "skip-t1-based-spatial-normalization",
-        "do-reconall",
-        "prefer_dedicated_fmaps",
-        "fmap-bspline",
-        "fmap-no-demean",
-        "use-syn-sdc",
-        "force-syn",
         "reports-only",
         "n_cpus",
         "mem_mb",
         "write-graph",
         "ignore",
+        "image_dimension",
+        "iterations_limit",
+        "max_iterations",
+        "modality_dimension",
+        "shrink_factor",
+        "smoothing_factor",
+        "similarity_metric",
+        "transformation_type",
+        "transformation_model",
+        "output_prefix",
+        "target_template",
+        "Rigid-body_registration",
+        "Input Glob Pattern",
+        "Input Regex",
+        "Input Tags"
     ]
+    
     app_options = {key: gear_context.config.get(key) for key in app_options_keys}
 
     app_options["n_cpus"] = set_n_cpus(app_options["n_cpus"])
-    # qsiprep only takes integers:
+    # set integer:
     app_options["mem_mb"] = int(1024 * set_mem_gb((app_options["mem_mb"] or 0) / 1024))
-
-    rs_path = gear_context.get_input_path("recon-spec")
-    if rs_path:
-        app_options["recon-spec"] = rs_path
-
-    eddy_path = gear_context.get_input_path("eddy-config")
-    if eddy_path:
-        app_options["eddy-config"] = eddy_path
-
-    # TO-DO: Validate app_options here, before launching the whole code
-    # Note: Is it possible to validate directly against the QSIprep parser?
-    # (https://github.com/PennLINC/qsiprep/blob/0.15.1/qsiprep/cli/run.py#L76-L517)
 
     return gear_options, app_options
