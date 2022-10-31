@@ -1,6 +1,6 @@
 {
   "name": "ants-constructIso",
-  "label": "Hyperfine: generate isotropic image from multiple acquisition planes",
+  "label": "Hyperfine: generate isotropic image from multiple orthogonal acquisition planes",
   "description": "ANTs based gear that runs antsMultivariateTemplateConstruction2.sh script to generate an isotropic image by co-registering a set of multiplanar input images",
   "version": "0.1.0",
   "author": "Niall Bourke",
@@ -11,43 +11,43 @@
   "url": "",
   
   "config": {
-    "image_dimension": {
+    "d": {
       "type": "integer",
       "default": 3,
       "description": "ImageDimension: 2 or 3 (for 2 or 3 dimensional registration of single volume)\nImageDimension: 4 (for template generation of time-series data)",
       "minimum": 2,
       "maximum": 4
     },
-    "iterations_limit": {
+    "i": {
       "type": "interger",
       "default": 4,
       "description": "Iteration limit (default 4): iterations of the template construction (Iteration limit)*NumImages registrations.",
       "minimum": 1,
       "maximum": 10
     },
-    "max_iterations": {
+    "q": {
       "type": "string",
       "default": "30x20x4",
       "description": "Max-iterations\nMax-Iterations in form: JxKxL where\n  J = max iterations at coarsest resolution (here, reduce by power of 2^2)\n\tK = middle resolution iterations (here,reduce by power of 2)\n\tL = fine resolution iterations (here, full resolution) !!this level takes much more time per iteration!!\nAdding an extra value before JxKxL (i.e. resulting in IxJxKxL) would add another iteration level."
     },
-    "modality_dimension": {
+    "k": {
       "type": "interger",
       "default": 1,
       "description": "Number of modalities used to construct the template (default 1):  For example, if one wanted to create a multimodal template consisting of T1,T2,and FA components",
       "minimum": 1,
       "maximum": 4
     },
-    "shrink_factor": {
+    "f": {
       "type": "string",
       "default": "4x2x1",
       "description": "Shrink factors (default = 6x4x2x1):  Also in the same form as -q max iterations. Needs to have the same number of components"
     },
-    "smoothing_factor": {
+    "s": {
       "type": "string",
       "default": "2x1x0vox",
       "description": "Smoothing factors (default = 3x2x1x0):  Also in the same form as -q max iterations. Needs to have the same number of components."
     },
-    "similarity_metric": {
+    "m": {
       "type": "string",
       "default": "MI",
       "enum": [
@@ -69,7 +69,7 @@
       ],
       "description": "Transform type (antsRegistrationSyN.sh), r: rigid, a: rigid + affine, s: rigid + affine + deformable syn, b: rigid + affine + deformable b-spline syn"
     },
-    "transformation_model": {
+    "t": {
       "type": "string",
       "default": "SyN",
       "enum": [
@@ -80,7 +80,7 @@
       ],
       "description": "Type of transformation model used for registration (EL = elastic transformation model, SY = SyN with time, arbitrary number of time points, S2 =  SyN with time, optimized for 2 time points, GR = greedy SyN, EX = exponential, DD = diffeomorphic demons style exponential, mapping, RI = purely rigid, RA = Affine rigid)"
     },
-    "output_prefix": {
+    "o": {
       "type": "string",
       "default": "ISO",
       "description": "A prefix that is prepended to all output files."
@@ -99,9 +99,9 @@
       ],
       "description": "Use this volume as the target of all inputs. When set to None, the script will create an unbiased starting point by averaging all inputs."
     },
-    "Rigid-body_registration": {
+    "r": {
       "type": "boolean",
-      "default": true,
+      "default": 1,
       "description": "Do rigid-body registration of inputs before creating template. Only useful when you do not have an initial template."
     },
     "Input Glob Pattern": {
@@ -225,12 +225,12 @@
 
   "custom": {
     "analysis-level": "participant",
-    "bids-app-binary": "antsMultivariateTemplateConstruction2.sh",
+    "bids-app-binary": "app/combinePlanes.sh",
     "bids-app-modalities": [
       "anat"
     ],
     "flywheel": {
-      "suite": "BIDS Apps",
+      "suite": "KCL Apps",
       "classification": {
         "type": [
           "nifti"
@@ -249,7 +249,7 @@
     },
     "gear-builder": {
       "category": "analysis",
-      "image": "flywheel/bids-ciso:0.1.0"
+      "image": "flywheel/ciso:0.1.0"
     },
     "license": {
       "non-commercial-use-only": false,
@@ -265,56 +265,24 @@
       ]
     }
   },
-
-  "environment": {
-    "AFNI_IMSAVE_WARNINGS": "NO",
-    "AFNI_INSTALLDIR": "/opt/afni-latest",
-    "ANTS_DEPS": "zlib1g-dev",
-    "ANTSPATH": "/opt/ants/bin",
-    "ARTHOME": "/opt/art",
-    "C3DPATH": "/opt/convert3d-nightly",
-    "CRN_SHARED_DATA": "/niworkflows_data",
-    "CUDA_VERSION": "10.2.89",
-    "DIPY_HOME": "/home/qsiprep/.dipy",
-    "FS_OVERRIDE": "0",
-    "FUNCTIONALS_DIR": "/opt/freesurfer/sessions",
-    "LD_LIBRARY_PATH": "/opt/qt512/lib/x86_64-linux-gnu:/opt/qt512/lib:/opt/qt512/lib/x86_64-linux-gnu:/opt/qt512/lib:/opt/ants/lib:/opt/fsl-6.0.5.1/lib:/usr/local/nvidia/lib:/usr/local/nvidia/lib64",
-    "NCCL_VERSION": "2.11.4",
-    "NVARCH": "x86_64",
-    "NV_CUDA_CUDART_VERSION": "10.2.89-1",
-    "NV_CUDA_LIB_VERSION": "10.2.89-1",
-    "NV_LIBCUBLAS_PACKAGE": "libcublas10=10.2.2.89-1",
-    "NV_LIBCUBLAS_PACKAGE_NAME": "libcublas10",
-    "NV_LIBCUBLAS_VERSION": "10.2.2.89-1",
-    "NV_LIBCUSPARSE_VERSION": "10.2.89-1",
-    "NV_LIBNCCL_PACKAGE": "libnccl2=2.11.4-1+cuda10.2",
-    "NV_LIBNCCL_PACKAGE_NAME": "libnccl2",
-    "NV_LIBNCCL_PACKAGE_VERSION": "2.11.4-1",
-    "NV_LIBNPP_VERSION": "10.2.89-1",
-    "NV_ML_REPO_ENABLED": "1",
-    "NV_ML_REPO_URL": "https://developer.download.nvidia.com/compute/machine-learning/repos/ubuntu1804/x86_64",
-    "NV_NVTX_VERSION": "10.2.89-1",
-    "NVIDIA_DRIVER_CAPABILITIES": "compute,utility",
-    "NVIDIA_REQUIRE_CUDA": "cuda>=10.2 brand=tesla,driver>=396,driver<397 brand=tesla,driver>=410,driver<411 brand=tesla,driver>=418,driver<419 brand=tesla,driver>=440,driver<441",
-    "NVIDIA_VISIBLE_DEVICES": "all",
-    "OS": "Linux",
-    "PATH": "/opt/poetry/bin:/opt/qt512/bin:/opt/art/bin:/opt/convert3d-nightly/bin:/usr/local/miniconda/bin:/opt/freesurfer/bin:/bin:/opt/freesurfer/tktools:/opt/freesurfer/mni/bin:/opt/qt512/bin:/opt/fsl-6.0.5.1/bin:/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/ants/bin:/opt/dsi-studio/dsi_studio_64:/opt/mrtrix3-latest/bin:/opt/3Tissue/bin:/opt/afni-latest",
-    "PKG_CONFIG_PATH": "/opt/qt512/lib/pkgconfig:/opt/qt512/lib/pkgconfig:",
-    "PYTHONUNBUFFERED": "1",
-    "MKL_NUM_THREADS": "1",
-    "OMP_NUM_THREADS": "1",
-    "MRTRIX_NTHREADS": "1",
-    "KMP_WARNINGS": "0",
-    "IS_DOCKER_8395080871": "1",
-    "FLYWHEEL": "/flywheel/v0",
-    "POETRY_HOME": "/opt/poetry",
-    "POETRY_VERSION": "1.1.13",
-    "POETRY_VIRTUALENVS_CREATE": "false"
-  },
-
   "inputs": {
     "bidsignore": {
       "description": "A .bidsignore file to provide to the bids-validator that this gear runs before running the main command.",
+      "base": "file",
+      "optional": true
+    },
+    "input1": {
+      "description": "",
+      "base": "file",
+      "optional": false
+    },
+    "input2": {
+      "description": "",
+      "base": "file",
+      "optional": true
+    },
+    "input3": {
+      "description": "",
       "base": "file",
       "optional": true
     },
@@ -322,5 +290,18 @@
       "base": "api-key",
       "read-only": true
     }
-  }
+  },
+  "environment": {
+    "workingDir": "/opt/ants",
+    "DEBIAN_FRONTEND": "noninteractive",
+    "ANTSPATH": "/opt/ants/bin/",
+    "PATH": "/opt/ants/bin/:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+    "LANG": "C.UTF-8",
+    "PYTHON_VERSION": "3.8.11",
+    "PYTHON_PIP_VERSION": "21.2.3",
+    "PYTHON_GET_PIP_URL": "https://github.com/pypa/get-pip/raw/c20b0cfd643cd4a19246ccf204e2997af70f6b21/public/get-pip.py",
+    "PYTHON_GET_PIP_SHA256": "fa6f3fb93cce234cd4e8dd2beb54a51ab9c247653b52855a48dd44e6b21ff28b",
+    "FLYWHEEL": "/flywheel/v0"
+  },
+  "command": "poetry run python /flywheel/v0/run.py"
 }
