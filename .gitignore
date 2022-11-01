@@ -9,7 +9,7 @@ __pycache__
 .idea/
 
 # large project files
-./fw_gear_ants-ciso/templates
+./fw_gear_ants_ciso/templates
 
 # test data
 ./data
