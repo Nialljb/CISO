@@ -1,9 +1,10 @@
 {
   "name": "ants-constructIso",
-  "label": "Hyperfine: generate isotropic image from multiple orthogonal acquisition planes",
+  "label": "Hyperfine: generate isotropic image from multiple acquisition planes",
   "description": "ANTs based gear that runs antsMultivariateTemplateConstruction2.sh script to generate an isotropic image by co-registering a set of multiplanar input images",
   "version": "0.1.0",
   "author": "Niall Bourke",
+  "command": "python /flywheel/v0/run.py",
   "cite": "A reproducible evaluation of ANTs similarity metric performance in brain image registration: Avants BB, Tustison NJ, Song G, Cook PA, Klein A, Gee JC. Neuroimage, 2011. http://www.ncbi.nlm.nih.gov/pubmed/20851191",
   "license": "MIT",
   "maintainer": "Flywheel <support@flywheel.io>",
@@ -11,43 +12,43 @@
   "url": "",
   
   "config": {
-    "d": {
+    "imageDimension": {
       "type": "integer",
       "default": 3,
       "description": "ImageDimension: 2 or 3 (for 2 or 3 dimensional registration of single volume)\nImageDimension: 4 (for template generation of time-series data)",
       "minimum": 2,
       "maximum": 4
     },
-    "i": {
+    "Iteration": {
       "type": "interger",
       "default": 4,
       "description": "Iteration limit (default 4): iterations of the template construction (Iteration limit)*NumImages registrations.",
       "minimum": 1,
       "maximum": 10
     },
-    "q": {
+    "maxIterations": {
       "type": "string",
       "default": "30x20x4",
       "description": "Max-iterations\nMax-Iterations in form: JxKxL where\n  J = max iterations at coarsest resolution (here, reduce by power of 2^2)\n\tK = middle resolution iterations (here,reduce by power of 2)\n\tL = fine resolution iterations (here, full resolution) !!this level takes much more time per iteration!!\nAdding an extra value before JxKxL (i.e. resulting in IxJxKxL) would add another iteration level."
     },
-    "k": {
+    "modalityNum": {
       "type": "interger",
       "default": 1,
       "description": "Number of modalities used to construct the template (default 1):  For example, if one wanted to create a multimodal template consisting of T1,T2,and FA components",
       "minimum": 1,
       "maximum": 4
     },
-    "f": {
+    "shrinkFactor": {
       "type": "string",
       "default": "4x2x1",
       "description": "Shrink factors (default = 6x4x2x1):  Also in the same form as -q max iterations. Needs to have the same number of components"
     },
-    "s": {
+    "smoothingFactor": {
       "type": "string",
       "default": "2x1x0vox",
       "description": "Smoothing factors (default = 3x2x1x0):  Also in the same form as -q max iterations. Needs to have the same number of components."
     },
-    "m": {
+    "similarityMetric": {
       "type": "string",
       "default": "MI",
       "enum": [
@@ -58,7 +59,7 @@
       ],
       "description": "Type of similarity metric used for registration.\nFor intramodal image registration, use:\n  CC = cross-correlation\n  MI = mutual information\n  PR = probability mapping\n  MSQ = mean square difference (Demons-like)\n  SSD = sum of squared differences\nFor intermodal image registration, use:\n  MI = mutual information\n  PR = probability mapping\n"
     },
-    "transformation_type": {
+    "transformationType": {
       "type": "string",
       "default": "s",
       "enum": [
@@ -69,7 +70,7 @@
       ],
       "description": "Transform type (antsRegistrationSyN.sh), r: rigid, a: rigid + affine, s: rigid + affine + deformable syn, b: rigid + affine + deformable b-spline syn"
     },
-    "t": {
+    "transformationModel": {
       "type": "string",
       "default": "SyN",
       "enum": [
@@ -80,7 +81,7 @@
       ],
       "description": "Type of transformation model used for registration (EL = elastic transformation model, SY = SyN with time, arbitrary number of time points, S2 =  SyN with time, optimized for 2 time points, GR = greedy SyN, EX = exponential, DD = diffeomorphic demons style exponential, mapping, RI = purely rigid, RA = Affine rigid)"
     },
-    "o": {
+    "prefix": {
       "type": "string",
       "default": "ISO",
       "description": "A prefix that is prepended to all output files."
@@ -99,7 +100,7 @@
       ],
       "description": "Use this volume as the target of all inputs. When set to None, the script will create an unbiased starting point by averaging all inputs."
     },
-    "r": {
+    "rigidRegistration": {
       "type": "boolean",
       "default": 1,
       "description": "Do rigid-body registration of inputs before creating template. Only useful when you do not have an initial template."
@@ -125,7 +126,7 @@
       "description": "Log debug messages",
       "type": "boolean"
     },
-    "bids_app_args": {
+    "kcl_app_args": {
       "description": "[arg1 [arg2 ...]]",
       "default": "",
       "type": "string"
@@ -225,8 +226,8 @@
 
   "custom": {
     "analysis-level": "participant",
-    "bids-app-binary": "app/combinePlanes.sh",
-    "bids-app-modalities": [
+    "kcl-app-binary": "app/combinePlanes.sh",
+    "kcl-app-modalities": [
       "anat"
     ],
     "flywheel": {
@@ -265,6 +266,12 @@
       ]
     }
   },
+
+  "environment": {
+    "FLYWHEEL": "/flywheel/v0",
+    "MYENV": "my test environment"
+  },
+
   "inputs": {
     "bidsignore": {
       "description": "A .bidsignore file to provide to the bids-validator that this gear runs before running the main command.",
@@ -290,18 +297,5 @@
       "base": "api-key",
       "read-only": true
     }
-  },
-  "environment": {
-    "workingDir": "/opt/ants",
-    "DEBIAN_FRONTEND": "noninteractive",
-    "ANTSPATH": "/opt/ants/bin/",
-    "PATH": "/opt/ants/bin/:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
-    "LANG": "C.UTF-8",
-    "PYTHON_VERSION": "3.8.11",
-    "PYTHON_PIP_VERSION": "21.2.3",
-    "PYTHON_GET_PIP_URL": "https://github.com/pypa/get-pip/raw/c20b0cfd643cd4a19246ccf204e2997af70f6b21/public/get-pip.py",
-    "PYTHON_GET_PIP_SHA256": "fa6f3fb93cce234cd4e8dd2beb54a51ab9c247653b52855a48dd44e6b21ff28b",
-    "FLYWHEEL": "/flywheel/v0"
-  },
-  "command": "poetry run python /flywheel/v0/run.py"
+  }
 }
