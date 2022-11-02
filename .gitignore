@@ -9,7 +9,7 @@ __pycache__
 .idea/
 
 # large project files
-./app/templates
+app/templates
 
 # test data
-./data
+data
