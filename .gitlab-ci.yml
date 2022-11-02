@@ -1,7 +1,0 @@
-include:
-  - project: flywheel-io/scientific-solutions/etc/sse-qa-ci
-    ref: 879de9565ef98c178dad6c3426ddf033a46fc654
-    file: ci/default.yml
-
-variables:
-  PYTEST_COV_FAIL_UNDER: 80

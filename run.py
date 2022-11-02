@@ -14,10 +14,10 @@ from flywheel_gear_toolkit import GearToolkitContext
 #from flywheel_gear_toolkit.utils.zip_tools import zip_output
 
 # import flywheel functions
-#from fw_gear_ants_ciso.main import prepare, run
-from fw_gear_ants_ciso.parser import parse_config
-from fw_gear_ants_ciso.generate_command import generate_command
-from fw_gear_ants_ciso.command_line import exec_command
+#from app.main import prepare, run
+from app.parser import parse_config
+from app.generate_command import generate_command
+from app.command_line import exec_command
 
 #from utils.dry_run import pretend_it_ran
 
@@ -33,7 +33,7 @@ def main(context: GearToolkitContext) -> None:
     gear_inputs, gear_options, app_options = parse_config(context)
 
     #print("gear options are",  gear_options)
-    #print("app options are",  app_options)
+    print("app options are",  app_options)
 
     command = generate_command(gear_inputs, gear_options, app_options)
     print(command)

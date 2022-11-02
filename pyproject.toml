@@ -1,15 +1,15 @@
 [tool.poetry]
-name = "fw-gear-bids-qsiprep"
+name = "fw-gear-ants-ciso"
 version = "1.0.3"
-description = "BIDS qsiprep 1.0.1_0.15.4. qsiprep configures pipelines for processing diffusion-weighted MRI (dMRI) data. The main features of this software are: A BIDS-app approach to preprocessing nearly all kinds of modern diffusion MRI data. Automatically generated preprocessing pipelines that correctly group, distortion correct, motion correct, denoise, co-register and resample your scans, producing visual reports and QC metrics. A system for running state-of-the-art reconstruction pipelines that include algorithms from Dipy, MRTrix, DSI Studio and others. A novel motion correction algorithm that works on DSI and random q-space sampling schemes"
-authors = ["Flywheel <support@flywheel.io>"]
+description = "ciso 0.0.1 ciso processes 3 othogonal aquisitions into a single isotropic image"
+authors = ["Niall J. Bourke, Flywheel <support@flywheel.io>"]
 readme = "README.md"
 license = "MIT"
 keywords = [
     "Flywheel",
     "Gears"
 ]
-repository = "https://gitlab.com/flywheel-io/flywheel-apps/bids-qsiprep"
+repository = "https://github.com/Nialljb/CISO"
 classifiers = [
     "Topic :: Scientific/Engineering"
 ]

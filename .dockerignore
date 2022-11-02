@@ -6,7 +6,7 @@
 !poetry.lock
 !run.py
 !manifest.json
-!fw_gear_bids_qsiprep
+!app
 !utils
 !.pre-commit-config.yaml
 !.env
@@ -19,5 +19,7 @@
 **/__pycache__
 #
 ## Ignore the "assets" or "data" folder that might be inside "tests"
+data
+app/templates
 #tests/assets
 #tests/data
