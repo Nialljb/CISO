@@ -19,7 +19,7 @@
 **/__pycache__
 #
 ## Ignore the "assets" or "data" folder that might be inside "tests"
-data
-app/templates
+!input
+!app/templates
 #tests/assets
 #tests/data

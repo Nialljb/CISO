@@ -1,10 +1,9 @@
 FROM nialljb/ciso:latest
-#flywheel/fw-gear-ants-base:2.3.5
-
+# flywheel/fw-gear-ants-base:2.3.5 
 ENV HOME=/root/
 
 ENV FLYWHEEL="/flywheel/v0"
-RUN mkdir -p $FLYWHEEL/input
+#RUN mkdir -p $FLYWHEEL/input
 WORKDIR $FLYWHEEL
 
 # Dependencies - some possibly dev dependencies - to run this.

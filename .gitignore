@@ -12,4 +12,4 @@ __pycache__
 app/templates
 
 # test data
-data
+input
