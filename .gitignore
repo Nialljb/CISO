@@ -10,6 +10,7 @@ __pycache__
 
 # Confidential
 config.json
+run.sh
 
 # large project files
 app/templates
