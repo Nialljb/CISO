@@ -19,24 +19,17 @@ def generate_command(gear_inputs: dict, gear_options: dict, app_options: dict,) 
     # This should be done here in case there are nargs='*' arguments
     # (PV: Not sure if this is the case anymore. Their template seems to
     # suggest so, but not the general documentation.)
+    
+    # TO DO: add in all the other options
     cmd = [
+        # will need to ammend this to pull relevent files
         str(gear_options["kcl-app-binary"]),
-        gear_inputs["input1"], # will need to ammend this to pull relevent files
-        # TO DO: add in all the other options
-        
-        # str(app_options["imageDimension"]),
-        # str(app_options["Iteration"]),
-        # str(app_options["maxIterations"]),
-        # str(app_options["modalityNum"]),
-        # str(app_options["shrinkFactor"]),
-        # str(app_options["smoothingFactor"]),
-        # str(app_options["similarityMetric"]),
-        # str(app_options["imageDimension"]),
-        # str(app_options["imageDimension"]),
-        # str(gear_options["output_analysis_id_dir"]),
-        # str(gear_options["analysis-level"])
+        gear_inputs["axi"], 
+        gear_inputs["cor"],
+        gear_inputs["sag"]
     ]
-    print("cmd is: ", cmd)
+    #print("cmd is: ", cmd)
+
     # get app parameters and pass them to the command
     command_parameters = {}
 

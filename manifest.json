@@ -1,301 +1,229 @@
 {
-  "name": "ants-constructIso",
-  "label": "Hyperfine: generate isotropic image from multiple acquisition planes",
-  "description": "ANTs based gear that runs antsMultivariateTemplateConstruction2.sh script to generate an isotropic image by co-registering a set of multiplanar input images",
-  "version": "0.1.0",
-  "author": "Niall Bourke",
-  "command": "python /flywheel/v0/run.py",
-  "cite": "A reproducible evaluation of ANTs similarity metric performance in brain image registration: Avants BB, Tustison NJ, Song G, Cook PA, Klein A, Gee JC. Neuroimage, 2011. http://www.ncbi.nlm.nih.gov/pubmed/20851191",
-  "license": "MIT",
-  "maintainer": "Flywheel <support@flywheel.io>",
-  "source": "",
-  "url": "",
-  
-  "config": {
-    "imageDimension": {
-      "type": "integer",
-      "default": 3,
-      "description": "ImageDimension: 2 or 3 (for 2 or 3 dimensional registration of single volume)\nImageDimension: 4 (for template generation of time-series data)",
-      "minimum": 2,
-      "maximum": 4
-    },
-    "Iteration": {
-      "type": "interger",
-      "default": 4,
-      "description": "Iteration limit (default 4): iterations of the template construction (Iteration limit)*NumImages registrations.",
-      "minimum": 1,
-      "maximum": 10
-    },
-    "maxIterations": {
-      "type": "string",
-      "default": "30x20x4",
-      "description": "Max-iterations\nMax-Iterations in form: JxKxL where\n  J = max iterations at coarsest resolution (here, reduce by power of 2^2)\n\tK = middle resolution iterations (here,reduce by power of 2)\n\tL = fine resolution iterations (here, full resolution) !!this level takes much more time per iteration!!\nAdding an extra value before JxKxL (i.e. resulting in IxJxKxL) would add another iteration level."
-    },
-    "modalityNum": {
-      "type": "interger",
-      "default": 1,
-      "description": "Number of modalities used to construct the template (default 1):  For example, if one wanted to create a multimodal template consisting of T1,T2,and FA components",
-      "minimum": 1,
-      "maximum": 4
-    },
-    "shrinkFactor": {
-      "type": "string",
-      "default": "4x2x1",
-      "description": "Shrink factors (default = 6x4x2x1):  Also in the same form as -q max iterations. Needs to have the same number of components"
-    },
-    "smoothingFactor": {
-      "type": "string",
-      "default": "2x1x0vox",
-      "description": "Smoothing factors (default = 3x2x1x0):  Also in the same form as -q max iterations. Needs to have the same number of components."
-    },
-    "similarityMetric": {
-      "type": "string",
-      "default": "MI",
-      "enum": [
-        "CC",
-        "MI",
-        "MSQ",
-        "DEMONS"
-      ],
-      "description": "Type of similarity metric used for registration.\nFor intramodal image registration, use:\n  CC = cross-correlation\n  MI = mutual information\n  PR = probability mapping\n  MSQ = mean square difference (Demons-like)\n  SSD = sum of squared differences\nFor intermodal image registration, use:\n  MI = mutual information\n  PR = probability mapping\n"
-    },
-    "transformationType": {
-      "type": "string",
-      "default": "s",
-      "enum": [
-        "r",
-        "a",
-        "s",
-        "b"
-      ],
-      "description": "Transform type (antsRegistrationSyN.sh), r: rigid, a: rigid + affine, s: rigid + affine + deformable syn, b: rigid + affine + deformable b-spline syn"
-    },
-    "transformationModel": {
-      "type": "string",
-      "default": "SyN",
-      "enum": [
-        "SyN",
-        "BSplineSyN",
-        "TimeVaryingVelocityField",
-        "TimeVaryingBSplineVelocityField"
-      ],
-      "description": "Type of transformation model used for registration (EL = elastic transformation model, SY = SyN with time, arbitrary number of time points, S2 =  SyN with time, optimized for 2 time points, GR = greedy SyN, EX = exponential, DD = diffeomorphic demons style exponential, mapping, RI = purely rigid, RA = Affine rigid)"
-    },
-    "prefix": {
-      "type": "string",
-      "default": "ISO",
-      "description": "A prefix that is prepended to all output files."
-    },
-    "target_template": {
-      "type": "string",
-      "default": "MNI152_T1_1mm.nii.gz",
-      "enum": [
-        "None",
-        "MNI152_T1_1mm.nii.gz",
-        "nihpd_asym_02-05_t2w.nii",
-        "nihpd_asym_05-08_t2w.nii",
-        "nihpd_asym_11-14_t2w.nii",
-        "nihpd_asym_17-21_t2w.nii",
-        "nihpd_asym_33-44_t2w.nii"
-      ],
-      "description": "Use this volume as the target of all inputs. When set to None, the script will create an unbiased starting point by averaging all inputs."
-    },
-    "rigidRegistration": {
-      "type": "boolean",
-      "default": 1,
-      "description": "Do rigid-body registration of inputs before creating template. Only useful when you do not have an initial template."
-    },
-    "Input Glob Pattern": {
-      "type": "string",
-      "default": "",
-      "description": "Glob pattern (Unix style pathname pattern expansion) that matches filename to be used as inputs. (Default ''). https://en.wikipedia.org/wiki/Glob_(programming)."
-    },
-    "Input Regex": {
-      "type": "string",
-      "default": ".*nii\\.gz",
-      "description": "Regular expression that matches filenames to be used as inputs. (Default '.*nii\\.gz'). https://en.wikipedia.org/wiki/Regular_expression."
-    },
-    "Input Tags": {
-      "type": "string",
-      "default": "",
-      "description": "Tag(s) that matches files to be used as inputs. When multiple tags are specified, they must be comma separated (e.g. T1template,ANTs)"
-    },
-
-    "debug": {
-      "default": false,
-      "description": "Log debug messages",
-      "type": "boolean"
-    },
-    "kcl_app_args": {
-      "description": "[arg1 [arg2 ...]]",
-      "default": "",
-      "type": "string"
-    },
-    "interactive-reports-only": {
-      "description": "create interactive report json files on already preprocessed data.",
-      "type": "boolean",
-      "optional": true
-    },
-    "infant": {
-      "description": "configure pipelines to process infant brains.",
-      "type": "boolean",
-      "optional": true
-    },
-    "boilerplate": {
-      "description": "generate boilerplate only.",
-      "type": "boolean",
-      "optional": true
-    },
-    "longitudinal": {
-      "description": "treat dataset as longitudinal - may increase runtime.",
-      "type": "boolean",
-      "optional": true
-    },
-    "reports-only": {
-      "description": "only generate reports, don't run workflows. This will only rerun report aggregation, not reportlet generation for specific nodes.",
-      "type": "boolean",
-      "optional": true
-    },
-    "verbose": {
-      "default": "v",
-      "description": "increases log verbosity for each occurrence, debug level is -vvv",
-      "enum": [
-        "",
-        "v",
-        "vv",
-        "vvv"
-      ],
-      "type": "string"
-    },
-    "n_cpus": {
-      "description": "Number of CPUs/cores to use. Leave blank or set to 0 to use the maximum available in the system.",
-      "optional": true,
-      "type": "integer"
-    },
-    "mem_mb": {
-      "description": "Maximum memory to use (MB). Leave blank or set to 0 to use the maximum available in the system.",
-      "optional": true,
-      "type": "integer"
-    },
-    "write-graph": {
-      "default": false,
-      "description": "Write workflow graph",
-      "type": "boolean"
-    },
-    "ignore": {
-      "description": "Ignore selected aspects of the input dataset to disable corresponding parts of the workflow (a space delimited list)  Possible choices: fieldmaps, slicetiming, sbref",
-      "default": "",
-      "type": "string"
-    },
-    "gear-ignore-bids-errors": {
-      "default": false,
-      "description": "By default, the gear will not run if there are any BIDS errors detected.  Set this to run even if BIDS errors are detected",
-      "type": "boolean"
-    },
-    "gear-run-bids-validation": {
-      "default": true,
-      "description": "Gear will run BIDS validation after downloading data.  If validation fails qsiprep will NOT be run.",
-      "type": "boolean"
-    },
-    "gear-save-intermediate-output": {
-      "default": false,
-      "description": "Gear will save ALL intermediate output into qsiprep_work.zip",
-      "type": "boolean"
-    },
-    "gear-intermediate-files": {
-      "description": "Space separated list of FILES to retain from the intermediate work directory.",
-      "default": "",
-      "type": "string"
-    },
-    "gear-intermediate-folders": {
-      "description": "Space separated list of FOLDERS to retain from the intermediate work directory.",
-      "default": "",
-      "type": "string"
-    },
-    "gear-dry-run": {
-      "default": false,
-      "description": "Do everything except actually executing qsiprep",
-      "type": "boolean"
-    },
-    "gear-keep-output": {
-      "default": false,
-      "description": "Don't delete output.  Output is always zipped into a single file for easy download.  Choose this option to prevent output deletion after zipping.",
-      "type": "boolean"
-    }
-  },
-
-  "custom": {
-    "analysis-level": "participant",
-    "kcl-app-binary": "app/combinePlanes.sh",
-    "kcl-app-modalities": [
-      "anat"
-    ],
-    "flywheel": {
-      "suite": "KCL Apps",
-      "classification": {
-        "type": [
-          "nifti"
-        ],
-        "modality": [
-          "MR"
-        ],
-        "components": [
-          "ANTs"
-        ],
-        "keywords": [
-          "registration",
-          "template"
-        ]
-      }
-    },
-    "gear-builder": {
-      "category": "analysis",
-      "image": "flywheel/ciso:0.1.0"
-    },
-    "license": {
-      "non-commercial-use-only": false,
-      "main": {
-        "name": "",
-        "url": ""
-      },
-      "dependencies": [
-        {
-          "name": "Other",
-          "url": "https://github.com/ANTsX/ANTs/blob/v2.2.0/COPYING.txt"
+    "name": "ants-mtconstruct2",
+    "label": "Hyperfine: generate isotropic image from orthogonal acquisition planes",
+    "description": "ANTs based gear that runs antsMultivariateTemplateConstruction2.sh script to generate an isotropic image by co-registering a set of multiplanar input images",
+    "version": "0.0.1-beta",
+    "author": "Niall Bourke",
+    "command": "python /flywheel/v0/run.py",
+    "cite": "A reproducible evaluation of ANTs similarity metric performance in brain image registration: Avants BB, Tustison NJ, Song G, Cook PA, Klein A, Gee JC. Neuroimage, 2011. http://www.ncbi.nlm.nih.gov/pubmed/20851191",
+    "license": "MIT",
+    "maintainer": "Flywheel <support@flywheel.io>",
+    "source": "",
+    "url": "",
+    "config": {
+        "imageDimension": {
+            "type": "integer",
+            "default": 3,
+            "description": "ImageDimension: 2 or 3 (for 2 or 3 dimensional registration of single volume)\nImageDimension: 4 (for template generation of time-series data)",
+            "minimum": 2,
+            "maximum": 4
+        },
+        "Iteration": {
+            "type": "integer",
+            "default": 4,
+            "description": "Iteration limit (default 4): iterations of the template construction (Iteration limit)*NumImages registrations.",
+            "minimum": 1,
+            "maximum": 10
+        },
+        "maxIterations": {
+            "type": "string",
+            "default": "30x20x4",
+            "description": "Max-iterations\nMax-Iterations in form: JxKxL where\n  J = max iterations at coarsest resolution (here, reduce by power of 2^2)\n\tK = middle resolution iterations (here,reduce by power of 2)\n\tL = fine resolution iterations (here, full resolution) !!this level takes much more time per iteration!!\nAdding an extra value before JxKxL (i.e. resulting in IxJxKxL) would add another iteration level."
+        },
+        "modalityNum": {
+            "type": "integer",
+            "default": 1,
+            "description": "Number of modalities used to construct the template (default 1):  For example, if one wanted to create a multimodal template consisting of T1,T2,and FA components",
+            "minimum": 1,
+            "maximum": 4
+        },
+        "shrinkFactor": {
+            "type": "string",
+            "default": "4x2x1",
+            "description": "Shrink factors (default = 6x4x2x1):  Also in the same form as -q max iterations.\u00a0Needs to have the same number of components"
+        },
+        "smoothingFactor": {
+            "type": "string",
+            "default": "2x1x0vox",
+            "description": "Smoothing factors (default = 3x2x1x0):  Also in the same form as -q max iterations. Needs to have the same number of components."
+        },
+        "similarityMetric": {
+            "type": "string",
+            "default": "MI",
+            "enum": [
+                "CC",
+                "MI",
+                "MSQ",
+                "DEMONS"
+            ],
+            "description": "Type of similarity metric used for registration.\nFor intramodal image registration, use:\n  CC = cross-correlation\n  MI = mutual information\n  PR = probability mapping\n  MSQ = mean square difference (Demons-like)\n  SSD = sum of squared differences\nFor intermodal image registration, use:\n  MI = mutual information\n  PR = probability mapping\n"
+        },
+        "transformationType": {
+            "type": "string",
+            "default": "s",
+            "enum": [
+                "r",
+                "a",
+                "s",
+                "b"
+            ],
+            "description": "Transform type (antsRegistrationSyN.sh), r: rigid, a: rigid + affine, s: rigid + affine + deformable syn, b: rigid + affine + deformable b-spline syn"
+        },
+        "transformationModel": {
+            "type": "string",
+            "default": "SyN",
+            "enum": [
+                "SyN",
+                "BSplineSyN",
+                "TimeVaryingVelocityField",
+                "TimeVaryingBSplineVelocityField"
+            ],
+            "description": "Type of transformation model used for registration (EL = elastic transformation model, SY = SyN with time, arbitrary number of time points, S2 =  SyN with time, optimized for 2 time points, GR = greedy SyN, EX = exponential, DD = diffeomorphic demons style exponential, mapping, RI = purely rigid, RA = Affine rigid)"
+        },
+        "prefix": {
+            "type": "string",
+            "default": "ISO",
+            "description": "A prefix that is prepended to all output files."
+        },
+        "target_template": {
+            "type": "string",
+            "default": "MNI152_T1_1mm.nii.gz",
+            "enum": [
+                "None",
+                "MNI152_T1_1mm.nii.gz",
+                "nihpd_asym_02-05_t2w.nii",
+                "nihpd_asym_05-08_t2w.nii",
+                "nihpd_asym_11-14_t2w.nii",
+                "nihpd_asym_17-21_t2w.nii",
+                "nihpd_asym_33-44_t2w.nii"
+            ],
+            "description": "Use this volume as the target of all inputs. When set to None, the script will create an unbiased starting point by averaging all inputs."
+        },
+        "rigidRegistration": {
+            "type": "boolean",
+            "optional": true,
+            "description": "Do rigid-body registration of inputs before creating template. Only useful when you do not have an initial template."
+        },
+        "Input Glob Pattern": {
+            "type": "string",
+            "default": "",
+            "description": "Glob pattern (Unix style pathname pattern expansion) that matches filename to be used as inputs. (Default ''). https://en.wikipedia.org/wiki/Glob_(programming)."
+        },
+        "Input Regex": {
+            "type": "string",
+            "default": ".*nii\\.gz",
+            "description": "Regular expression that matches filenames to be used as inputs. (Default '.*nii\\.gz'). https://en.wikipedia.org/wiki/Regular_expression."
+        },
+        "Input Tags": {
+            "type": "string",
+            "default": "",
+            "description": "Tag(s) that matches files to be used as inputs. When multiple tags are specified, they must be comma separated (e.g. T1template,ANTs)"
+        },
+        "debug": {
+            "default": false,
+            "description": "Log debug messages",
+            "type": "boolean"
+        },
+        "verbose": {
+            "default": "v",
+            "description": "increases log verbosity for each occurrence, debug level is -vvv",
+            "enum": [
+                "",
+                "v",
+                "vv",
+                "vvv"
+            ],
+            "type": "string"
+        },
+        "n_cpus": {
+            "description": "Number of CPUs/cores to use. Leave blank or set to 0 to use the maximum available in the system.",
+            "optional": true,
+            "type": "integer"
+        },
+        "mem_mb": {
+            "description": "Maximum memory to use (MB). Leave blank or set to 0 to use the maximum available in the system.",
+            "optional": true,
+            "type": "integer"
         }
-      ]
+    },
+    "custom": {
+        "analysis-level": "participant",
+        "kcl-app-binary": "app/combinePlanes.sh",
+        "kcl-app-modalities": [
+            "anat"
+        ],
+        "flywheel": {
+            "suite": "KCL Apps",
+            "classification": {
+                "type": [
+                    "nifti"
+                ],
+                "modality": [
+                    "MR"
+                ],
+                "components": [
+                    "ANTs"
+                ],
+                "keywords": [
+                    "registration",
+                    "template"
+                ]
+            }
+        },
+        "gear-builder": {
+            "category": "analysis",
+            "image": "flywheel/ciso:0.0.1-beta"
+        },
+        "license": {
+            "non-commercial-use-only": false,
+            "main": {
+                "name": "",
+                "url": ""
+            },
+            "dependencies": [
+                {
+                    "name": "Other",
+                    "url": "https://github.com/ANTsX/ANTs/blob/v2.2.0/COPYING.txt"
+                }
+            ]
+        }
+    },
+    "environment": {
+        "FLYWHEEL": "/flywheel/v0",
+        "MYENV": "my test environment",
+        "ANTSPATH": "/opt/ants/bin/",
+        "PYTHON_GET_PIP_SHA256": "fa6f3fb93cce234cd4e8dd2beb54a51ab9c247653b52855a48dd44e6b21ff28b",
+        "PYTHON_GET_PIP_URL": "https://github.com/pypa/get-pip/raw/c20b0cfd643cd4a19246ccf204e2997af70f6b21/public/get-pip.py",
+        "PYTHON_PIP_VERSION": "21.2.3",
+        "PYTHON_VERSION": "3.8.11",
+        "GPG_KEY": "E3FF2839C048B25C084DEBE9B26995E310250568",
+        "LANG": "C.UTF-8",
+        "PATH": "/opt/ants/bin/:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+    },
+    "inputs": {
+        "bidsignore": {
+            "description": "A .bidsignore file to provide to the bids-validator that this gear runs before running the main command.",
+            "base": "file",
+            "optional": true
+        },
+        "axi": {
+            "description": "Axial plane acquisition",
+            "base": "file",
+            "optional": false
+        },
+        "cor": {
+            "description": "Coronal plane acquisition",
+            "base": "file",
+            "optional": true
+        },
+        "sag": {
+            "description": "Sagital plane acquisition",
+            "base": "file",
+            "optional": true
+        },
+        "api-key": {
+            "base": "api-key",
+            "read-only": false
+        }
     }
-  },
-
-  "environment": {
-    "FLYWHEEL": "/flywheel/v0",
-    "MYENV": "my test environment"
-  },
-
-  "inputs": {
-    "bidsignore": {
-      "description": "A .bidsignore file to provide to the bids-validator that this gear runs before running the main command.",
-      "base": "file",
-      "optional": true
-    },
-    "input1": {
-      "description": "",
-      "base": "file",
-      "optional": false
-    },
-    "input2": {
-      "description": "",
-      "base": "file",
-      "optional": true
-    },
-    "input3": {
-      "description": "",
-      "base": "file",
-      "optional": true
-    },
-    "api-key": {
-      "base": "api-key",
-      "read-only": true
-    }
-  }
 }

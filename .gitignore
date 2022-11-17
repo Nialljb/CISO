@@ -8,8 +8,9 @@ __pycache__
 .vscode
 .idea/
 
+# Confidential
+config.json
+
 # large project files
 app/templates
-
-# test data
-input
+ants-mtconstruct2-0.0.1-beta-6374f5853ccf7a9697415b6a

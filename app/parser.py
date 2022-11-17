@@ -15,36 +15,26 @@ def parse_config(
     """
 
     # Gear Inputs
-    gear_inputs = {
-        "input1" : gear_context.get_input("input1"), # label in manifest
-        "input2" : gear_context.get_input("input2"),
-        "input3" : gear_context.get_input("input3")
-    }
+    # Changed to call directly (user input)
+    axi = gear_context.get_input("axi") # label in manifest
+    cor = gear_context.get_input("cor")
+    sag = gear_context.get_input("sag")
 
     # ##   Gear config   ## #
     # some options here not relevent/called
+    # Manifest options can be set by Dev (not seen by user). These can be altered in the manifest and avoids needing to change anything else
+    # Config options are those to be selected by user (can also have default values)
     gear_options = {
         "kcl-app-binary": gear_context.manifest.get("custom").get("kcl-app-binary"),
-        "kcl-app-modalities": gear_context.manifest.get("custom").get(
-            "kcl-app-modalities"
-        ),
+        "kcl-app-modalities": gear_context.manifest.get("custom").get("kcl-app-modalities"),
         "analysis-level": gear_context.manifest.get("custom").get("analysis-level"),
-        "ignore-bids-errors": gear_context.config.get("gear-ignore-bids-errors"),
-        "run-bids-validation": gear_context.config.get("gear-run-bids-validation"),
-        "save-intermediate-output": gear_context.config.get(
-            "gear-save-intermediate-output"
-        ),
-        "intermediate-files": gear_context.config.get("gear-intermediate-files"),
-        "intermediate-folders": gear_context.config.get("gear-intermediate-folders"),
-        "dry-run": gear_context.config.get("gear-dry-run"),
-        "keep-output": gear_context.config.get("gear-keep-output"),
         "output-dir": gear_context.output_dir,
         "destination-id": gear_context.destination["id"],
         "work-dir": gear_context.work_dir,
         "client": gear_context.client,
     }
 
-    # set the output dir name for the BIDS app:
+    # set the output dir name:
     gear_options["output_analysis_id_dir"] = (
         gear_options["output-dir"] / gear_options["destination-id"]
     )
@@ -67,7 +57,9 @@ def parse_config(
     "transformationModel", # m
     "prefix" # o
 ]
-    #print("app option keys", app_options_keys)
-    app_options = {key: gear_context.manifest.get(key) for key in app_options_keys}
+    # keys here should be pulled from config (file generated after user selections on platform).
+    # These may still be manifest defaults but allows user input
+    # If pulled directly from manifest will not collect user choices. 
+    app_options = {key: gear_context.config.get(key) for key in app_options_keys}
 
     return gear_inputs, gear_options, app_options
