@@ -5,6 +5,7 @@ from flywheel_gear_toolkit import GearToolkitContext
 
 def parse_config(
     gear_context: GearToolkitContext,
+     
 ) -> Tuple[dict, dict, dict]: # Add dict for each set of outputs
     """Parse the config and other options from the context, both gear and app options.
 
@@ -16,9 +17,12 @@ def parse_config(
 
     # Gear Inputs
     # Changed to call directly (user input)
-    axi = gear_context.get_input("axi") # label in manifest
-    cor = gear_context.get_input("cor")
-    sag = gear_context.get_input("sag")
+    gear_inputs = {
+        "axi": gear_context.get_input_path("axi"), #.get("location").path("path"), # label in manifest
+        "cor": gear_context.get_input_path("cor"),
+        "sag": gear_context.get_input_path("sag")
+    }
+
 
     # ##   Gear config   ## #
     # some options here not relevent/called
@@ -48,18 +52,15 @@ def parse_config(
     app_options_keys = [
     "imageDimension", # d
     "Iteration", # i
-    "maxIterations", # r
-    "modalityNum", # k
-    "shrinkFactor", # f
-    "smoothingFactor", # s
-    "similarityMetric", # q
-    "transformationType", # t
-    "transformationModel", # m
-    "prefix" # o
+    "similarityMetric", # m
+    "transformationModel", # t
+    "prefix", # o
+    "target_template"
 ]
     # keys here should be pulled from config (file generated after user selections on platform).
     # These may still be manifest defaults but allows user input
     # If pulled directly from manifest will not collect user choices. 
     app_options = {key: gear_context.config.get(key) for key in app_options_keys}
 
+    # gear_inputs, 
     return gear_inputs, gear_options, app_options

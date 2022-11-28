@@ -21,6 +21,8 @@ def generate_command(gear_inputs: dict, gear_options: dict, app_options: dict,) 
     # suggest so, but not the general documentation.)
     
     # TO DO: add in all the other options
+    print("gear input: ", gear_inputs["axi"])
+
     cmd = [
         # will need to ammend this to pull relevent files
         str(gear_options["kcl-app-binary"]),
@@ -34,7 +36,7 @@ def generate_command(gear_inputs: dict, gear_options: dict, app_options: dict,) 
     command_parameters = {}
 
     for key, val in app_options.items():
-
+        print("key val pair: ", key, val)
         # these arguments are passed directly to the command as is
         if key == "kcl_app_args" and val:
             kcl_app_args = val.split(" ")
@@ -44,11 +46,13 @@ def generate_command(gear_inputs: dict, gear_options: dict, app_options: dict,) 
         else:
             command_parameters[key] = val
 
-    # check to see if we need to skip the bids-validation:
-    if not gear_options["run-bids-validation"]:
-        command_parameters["skip-bids-validation"] = True
+    # # check to see if we need to skip the bids-validation:
+    # if not gear_options["run-bids-validation"]:
+    #     command_parameters["skip-bids-validation"] = True
 
     cmd = build_command_list(cmd, command_parameters)
+    print("cmd is: ", cmd)
+    print("cmd param are: ", command_parameters)
     
     for ii, cc in enumerate(cmd):
         print("loop", ii, cc)

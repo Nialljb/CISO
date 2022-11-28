@@ -1,7 +1,31 @@
 {
-    "author": "Niall Bourke",
-    "cite": "A reproducible evaluation of ANTs similarity metric performance in brain image registration: Avants BB, Tustison NJ, Song G, Cook PA, Klein A, Gee JC. Neuroimage, 2011. http://www.ncbi.nlm.nih.gov/pubmed/20851191",
-    "command": "python /flywheel/v0/run.py",
+    "name": "ciso",
+    "inputs": {
+        "api-key": {
+            "base": "api-key",
+            "read-only": false
+        },
+        "axi": {
+            "base": "file",
+            "optional": false,
+            "description": "Axial plane acquisition"
+        },
+        "bidsignore": {
+            "base": "file",
+            "optional": true,
+            "description": "A .bidsignore file to provide to the bids-validator that this gear runs before running the main command."
+        },
+        "cor": {
+            "base": "file",
+            "optional": true,
+            "description": "Coronal plane acquisition"
+        },
+        "sag": {
+            "base": "file",
+            "optional": true,
+            "description": "Sagital plane acquisition"
+        }
+    },
     "config": {
         "debug": {
             "default": false,
@@ -60,7 +84,7 @@
             "type": "integer"
         },
         "prefix": {
-            "default": "isotropicReconstruction",
+            "default": "ISO",
             "description": "A prefix that is prepended to all output files.",
             "type": "string"
         },
@@ -180,6 +204,10 @@
             "non-commercial-use-only": false
         }
     },
+    "author": "Niall Bourke",
+    "maintainer": "Flywheel <support@flywheel.io>",
+    "cite": "A reproducible evaluation of ANTs similarity metric performance in brain image registration: Avants BB, Tustison NJ, Song G, Cook PA, Klein A, Gee JC. Neuroimage, 2011. http://www.ncbi.nlm.nih.gov/pubmed/20851191",
+    "capabilities": [],
     "description": "ANTs based gear that runs antsMultivariateTemplateConstruction2.sh script to generate an isotropic image by co-registering a set of multiplanar input images",
     "environment": {
         "ANTSPATH": "/opt/ants/bin/",
@@ -196,37 +224,11 @@
         "PYTHON_PIP_VERSION": "21.2.3",
         "PYTHON_VERSION": "3.8.11"
     },
-    "inputs": {
-        "api-key": {
-            "base": "api-key",
-            "read-only": false
-        },
-        "axi": {
-            "base": "file",
-            "description": "Axial plane acquisition",
-            "optional": false
-        },
-        "bidsignore": {
-            "base": "file",
-            "description": "A .bidsignore file to provide to the bids-validator that this gear runs before running the main command.",
-            "optional": true
-        },
-        "cor": {
-            "base": "file",
-            "description": "Coronal plane acquisition",
-            "optional": true
-        },
-        "sag": {
-            "base": "file",
-            "description": "Sagital plane acquisition",
-            "optional": true
-        }
-    },
-    "label": "Hyperfine: generate isotropic image from orthogonal acquisition planes",
+    "command": "python /flywheel/v0/run.py",
     "license": "MIT",
-    "maintainer": "Flywheel <support@flywheel.io>",
-    "name": "ciso",
-    "source": "",
+    "label": "Hyperfine: generate isotropic image from orthogonal acquisition planes",
     "url": "",
-    "version": "0.0.5-beta"
+    "source": "",
+    "version": "0.0.5-beta",
+    "flywheel": null
 }

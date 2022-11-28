@@ -1,4 +1,5 @@
 # Degugging gears with fw-beta
+https://flywheel-io.gitlab.io/tools/app/cli/fw-beta/login/
 
 ### Once you have the Dockerfile and manifest.json, upload the gear to your FW instance
 - The manifest gear-builder 'image' must match the 'version' and 'docker tag'
@@ -27,7 +28,7 @@ upload gear to flywheel instance (requires being signed in)
 * This may take a while to start running, but we now have the config options saved as we need and can instsantly downlaod the job from the command line. This gives us the full Flywheel structure which will help for debugging. 
 
 ### Then, run:
-> fw-beta job pull <my_job_id> . # 6374f5853ccf7a9697415b6a
+> fw-beta job pull <my_job_id> . 
 
 **requires site admin privlidges** 
 - fw-beta will download the gear Docker image if not present, plus the gear inputs, config, etc., in a folder called <my_gear_name>-<my_gear_version>-<my_job_id>
@@ -35,7 +36,7 @@ upload gear to flywheel instance (requires being signed in)
 
 > cd <my_gear_name>-<my_gear_version>-<my_job_id>
 
-> fw-beta gear config -i api-key=$FW_API_KEY
+> fw-beta gear config -i api-key=$FW_CLI_API_KEY
 
 > cd ..
 
@@ -54,6 +55,9 @@ specified in "run.sh".
 - The config contains all the options used in running the gear including those selected by the user. 
 
 ### run this container interactivly 
+If entrypoint has been defined in Dockerfile, this can be overcome interactivly by:
+docker run -it --entrypoint /bin/bash <image>
+
  `--rm`  good practice to remove container, rather than it spinning in the background when shut down 
 
  `-v` mount points (access to files/data)
@@ -61,11 +65,7 @@ specified in "run.sh".
  `\` allows continuation on return
  Can manually specify entry point to bash if different in Dockerfile, so as to easily navigate
 
-> docker run -it --rm -v "/Users/nbourke/My Drive/scratch/CISO/ants-mtconstruct2-0.0.1-beta-6374f5853ccf7a9697415b6a/input:/flywheel/v0/input"\
-        -v "/Users/nbourke/My Drive/scratch/CISO/ants-mtconstruct2-0.0.1-beta-6374f5853ccf7a9697415b6a/output:/flywheel/v0/output"\
-        -v "/Users/nbourke/My Drive/scratch/CISO/ants-mtconstruct2-0.0.1-beta-6374f5853ccf7a9697415b6a/work:/flywheel/v0/work"\
-        -v "/Users/nbourke/My Drive/scratch/CISO/ants-mtconstruct2-0.0.1-beta-6374f5853ccf7a9697415b6a/config.json:/flywheel/v0/config.json"\
-        -v "/Users/nbourke/My Drive/scratch/CISO/ants-mtconstruct2-0.0.1-beta-6374f5853ccf7a9697415b6a/manifest.json:/flywheel/v0/manifest.json"\
+> docker run -it --rm -v ""\
         flywheel/ciso:0.0.1-beta
 
 The structure of this container is how the Flywheel instance sees it so now can debug easier by checking the input folder and config.json to make sure they match. There will be sample data there now from Flywheel that was specified by the user on the instance. 

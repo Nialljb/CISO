@@ -1,31 +1,32 @@
-FROM nialljb/ciso:latest
-# flywheel/fw-gear-ants-base:2.3.5 
-# nialljb/ciso:beta-bash
+FROM nialljb/njb-ants-fsl-base:0.0.1 as base
 
 ENV HOME=/root/
-
 ENV FLYWHEEL="/flywheel/v0"
-RUN mkdir -p $FLYWHEEL/input
 WORKDIR $FLYWHEEL
-
-# Dependencies - some possibly dev dependencies - to run this.
-# Install git to run pre-commit hooks inside container:
-RUN apt-get update && \
-    apt-get install --no-install-recommends -y software-properties-common=0.96.20.2-2 && \
-    apt-get clean && \
-    pip3 install --no-cache-dir "poetry==1.1.11" && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN mkdir -p $FLYWHEEL/input
 
 # Installing the current project (most likely to change, above layer can be cached)
 COPY ./ $FLYWHEEL/
 
+# Dev dependencies (conda, jq, poetry, flywheel installed in base)
+RUN apt-get update && \
+    apt-get clean && \
+    pip install flywheel-gear-toolkit && \
+    pip install flywheel-sdk && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 # Installing main dependencies
-RUN poetry install --no-dev
-RUN pip3 install --no-cache-dir -r $FLYWHEEL/requirements.txt
+# FSL (add additional dep here)
+# RUN /opt/conda/bin/conda install -n base -c $FSL_CONDA_CHANNEL fsl-base fsl-utils fsl-avwutils -c conda-forge
+# set FSLDIR so FSL tools can use it, in this minimal case, the FSLDIR will be the root conda directory
+ENV PATH="/opt/conda/bin:${PATH}"
+ENV FSLDIR="/opt/conda"
+# activate FSL
+#RUN $FSLDIR/etc/fslconf/fsl.sh
 
 # Configure entrypoint
-RUN chmod a+x $FLYWHEEL/run.py
-
-ENTRYPOINT ["python","poetry","run","/flywheel/v0/run.py"] 
-# bash
+RUN bash -c 'chmod +rx $FLYWHEEL/run.py' && \
+    bash -c 'chmod +rx $FLYWHEEL/app/beta-gear.sh' \
+    bash -c 'chmod +rx $FLYWHEEL/app/beta_triplane_SRImageReconViaANTS.py'
+ENTRYPOINT ["python","/flywheel/v0/run.py"] 
 # Flywheel reads the config command over this entrypoint

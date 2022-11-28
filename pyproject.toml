@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "fw-gear-ants-ciso"
+name = "ciso-0.0.2-beta"
 version = "1.0.3"
 description = "ciso 0.0.1 ciso processes 3 othogonal aquisitions into a single isotropic image"
 authors = ["Niall J. Bourke, Flywheel <support@flywheel.io>"]
