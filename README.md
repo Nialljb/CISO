@@ -42,10 +42,6 @@ Inputs:
 
 ----
 
-[[*TOC*]]
-
-----
-
 ### Inputs
 
 * bidsignore
@@ -88,11 +84,12 @@ Isotropic volume
 
 #### Metadata
 
-Any notes on metadata created by this gear
+No metadata currently created by this gear
 
 ### Pre-requisites
 
-This section contains any prerequisites
+- Three orthogonal aquisitions
+- Age of participant (for age matched template)
 
 #### Prerequisite Gear Runs
 

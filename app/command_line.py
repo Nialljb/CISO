@@ -153,7 +153,7 @@ def exec_command(
         # The "shell" parameter is needed for bash output redirects
         # (e.g. >,>>,&>)
         if shell:
-            run_command = " ".join(command)
+            run_command = command # passing shell sript directly, rather than parser. # " ".join(command)
         else:
             run_command = command
 

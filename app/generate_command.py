@@ -36,7 +36,7 @@ def generate_command(gear_inputs: dict, gear_options: dict, app_options: dict,) 
     command_parameters = {}
 
     for key, val in app_options.items():
-        print("key val pair: ", key, val)
+        # print("key val pair: ", key, val)
         # these arguments are passed directly to the command as is
         if key == "kcl_app_args" and val:
             kcl_app_args = val.split(" ")
@@ -51,11 +51,11 @@ def generate_command(gear_inputs: dict, gear_options: dict, app_options: dict,) 
     #     command_parameters["skip-bids-validation"] = True
 
     cmd = build_command_list(cmd, command_parameters)
-    print("cmd is: ", cmd)
-    print("cmd param are: ", command_parameters)
+    # print("cmd is: ", cmd)
+    # print("cmd param are: ", command_parameters)
     
     for ii, cc in enumerate(cmd):
-        print("loop", ii, cc)
+        #print("loop", ii, cc)
         if cc.startswith("--verbose"):
             # The app takes a "-v/--verbose" boolean flag (either present or not),
             # while the config verbose argument would be "--verbose=v".
