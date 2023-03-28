@@ -21,7 +21,7 @@ def main(context: GearToolkitContext) -> None:
     gear_inputs, gear_options, app_options = parse_config(context)
 
     # 1. Simple smooth brain version
-    command = "/flywheel/v0/app/beta-gear.sh"
+    command = "/flywheel/v0/app/ciso-gear.sh"
     #os.system(command)
 
     # 2. FW control submission run/error logs
