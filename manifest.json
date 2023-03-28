@@ -96,11 +96,15 @@
             "enum": [
                 "MNI152_T1_1mm.nii.gz",
                 "None",
+                "nihpd_asym_00-02_t2w.nii",
                 "nihpd_asym_02-05_t2w.nii",
                 "nihpd_asym_05-08_t2w.nii",
+                "nihpd_asym_08-11_t2w.nii",
                 "nihpd_asym_11-14_t2w.nii",
+                "nihpd_asym_14-17_t2w.nii",
                 "nihpd_asym_17-21_t2w.nii",
-                "nihpd_asym_33-44_t2w.nii"
+                "nihpd_asym_33-44_t2w.nii",
+                "nihpd_asym_44-60_t2w.nii"
             ],
             "type": "string"
         },
@@ -160,7 +164,7 @@
         },
         "gear-builder": {
             "category": "analysis",
-            "image": "flywheel/ciso:0.1.5-beta"
+            "image": "flywheel/ciso:0.1.8"
         },
         "kcl-app-binary": "app/ciso-gear.sh",
         "kcl-app-modalities": [
@@ -222,5 +226,5 @@
     "name": "ciso",
     "source": "http://www.ncbi.nlm.nih.gov/pubmed/20851191",
     "url": "https://github.com/ANTsX/ANTs",
-    "version": "0.1.5-beta"
+    "version": "0.1.8"
 }
