@@ -1,3 +1,6 @@
+### Working in vscode with git - great resource
+https://code.visualstudio.com/docs/sourcecontrol/overview
+
 # Degugging gears with fw-beta
 https://flywheel-io.gitlab.io/tools/app/cli/fw-beta/login/
 

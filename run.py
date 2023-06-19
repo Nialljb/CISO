@@ -10,6 +10,7 @@ from flywheel_gear_toolkit import GearToolkitContext
 from app.parser import parse_config
 from app.generate_command import generate_command
 from app.command_line import exec_command
+from app.findMatchedScans import find_files
 # The gear is split up into 2 main components. The run.py file which is executed
 # when the container runs. The run.py file then imports the rest of the gear as a
 # module.
@@ -18,7 +19,12 @@ log = logging.getLogger(__name__)
 
 def main(context: GearToolkitContext) -> None:
     """Parses config and runs."""
-    gear_inputs, gear_options, app_options = parse_config(context)
+    # gear_inputs, gear_options, app_options = parse_config(context) # Is this parse is redundent? files are parsed in shell script
+
+    # if folder is empty?
+    if not os.listdir('/flywheel/v0/input/cor') or not os.listdir('/flywheel/v0/input/sag'):
+        find_files()
+
 
     # 1. Simple smooth brain version
     command = "/flywheel/v0/app/ciso-gear.sh"

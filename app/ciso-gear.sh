@@ -37,7 +37,6 @@ similarityMetric="$(parse_config 'similarityMetric')"   #`jq -r '.config.similar
 target_template="$(parse_config 'target_template')"    #`jq -r '.config.target_template ' /flywheel/v0/config.json`
 prefix="$(parse_config 'prefix')" #`jq -r '.config.prefix ' /flywheel/v0/config.json`
 
-
 ##############################################################################
 # Handle INPUT file
 

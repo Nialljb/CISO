@@ -96,6 +96,9 @@
             "enum": [
                 "MNI152_T1_1mm.nii.gz",
                 "None",
+                "BCP-00M-T2.nii",
+                "BCP-03M-T2.nii",
+                "BCP-06M-T2.nii",
                 "nihpd_asym_00-02_t2w.nii",
                 "nihpd_asym_02-05_t2w.nii",
                 "nihpd_asym_05-08_t2w.nii",
@@ -160,11 +163,11 @@
                     "nifti"
                 ]
             },
-            "suite": "KCL Apps"
+            "suite": "UNITY Apps"
         },
         "gear-builder": {
             "category": "analysis",
-            "image": "flywheel/ciso:0.1.8"
+            "image": "flywheel/ciso:BETA.0.1.9"
         },
         "kcl-app-binary": "app/ciso-gear.sh",
         "kcl-app-modalities": [
@@ -184,7 +187,7 @@
             "non-commercial-use-only": false
         }
     },
-    "description": "ANTs based gear that runs antsMultivariateTemplateConstruction2.sh script to generate an isotropic image by co-registering a set of multiplanar input images",
+    "description": "ANTs based gear that runs antsMultivariateTemplateConstruction2.sh script to generate an isotropic image by co-registering a set of multiplanar input images. **MOST RECENT VERSION UNDER TEST. LAST WORKING VERSION 0.1.8**",
     "environment": {
         "ANTSPATH": "/opt/ants/bin/",
         "CONDA_DIR": "/opt/conda",
@@ -202,7 +205,7 @@
     "inputs": {
         "api-key": {
             "base": "api-key",
-            "read-only": false
+            "read-only": true
         },
         "axi": {
             "base": "file",
@@ -212,12 +215,12 @@
         "cor": {
             "base": "file",
             "description": "Coronal plane acquisition",
-            "optional": false
+            "optional": true
         },
         "sag": {
             "base": "file",
             "description": "Sagital plane acquisition",
-            "optional": false
+            "optional": true
         }
     },
     "label": "Hyperfine: generate isotropic image from orthogonal acquisition planes",
@@ -226,5 +229,5 @@
     "name": "ciso",
     "source": "http://www.ncbi.nlm.nih.gov/pubmed/20851191",
     "url": "https://github.com/ANTsX/ANTs",
-    "version": "0.1.8"
+    "version": "BETA.0.1.9"
 }
