@@ -1,7 +1,26 @@
 {
-    "author": "Niall Bourke",
-    "cite": "A reproducible evaluation of ANTs similarity metric performance in brain image registration: Avants BB, Tustison NJ, Song G, Cook PA, Klein A, Gee JC. Neuroimage, 2011. http://www.ncbi.nlm.nih.gov/pubmed/20851191",
-    "command": "python /flywheel/v0/run.py",
+    "name": "ciso",
+    "inputs": {
+        "api-key": {
+            "base": "api-key",
+            "read-only": true
+        },
+        "axi": {
+            "base": "file",
+            "optional": false,
+            "description": "Axial plane acquisition"
+        },
+        "cor": {
+            "base": "file",
+            "optional": true,
+            "description": "Coronal plane acquisition"
+        },
+        "sag": {
+            "base": "file",
+            "optional": true,
+            "description": "Sagital plane acquisition"
+        }
+    },
     "config": {
         "debug": {
             "default": false,
@@ -167,7 +186,7 @@
         },
         "gear-builder": {
             "category": "analysis",
-            "image": "flywheel/ciso:BETA.0.0.1"
+            "image": "flywheel/ciso:BETA.0.1.9"
         },
         "kcl-app-binary": "app/ciso-gear.sh",
         "kcl-app-modalities": [
@@ -187,6 +206,10 @@
             "non-commercial-use-only": false
         }
     },
+    "author": "Niall Bourke",
+    "maintainer": "Niall Bourke <niall.bourke@kcl.ac.uk>",
+    "cite": "A reproducible evaluation of ANTs similarity metric performance in brain image registration: Avants BB, Tustison NJ, Song G, Cook PA, Klein A, Gee JC. Neuroimage, 2011. http://www.ncbi.nlm.nih.gov/pubmed/20851191",
+    "capabilities": [],
     "description": "ANTs based gear that runs antsMultivariateTemplateConstruction2.sh script to generate an isotropic image by co-registering a set of multiplanar input images. **MOST RECENT VERSION UNDER TEST. LAST WORKING VERSION 0.1.8**",
     "environment": {
         "ANTSPATH": "/opt/ants/bin/",
@@ -202,32 +225,11 @@
         "PYTHON_PIP_VERSION": "21.2.3",
         "PYTHON_VERSION": "3.8.11"
     },
-    "inputs": {
-        "api-key": {
-            "base": "api-key",
-            "read-only": true
-        },
-        "axi": {
-            "base": "file",
-            "description": "Axial plane acquisition",
-            "optional": false
-        },
-        "cor": {
-            "base": "file",
-            "description": "Coronal plane acquisition",
-            "optional": true
-        },
-        "sag": {
-            "base": "file",
-            "description": "Sagital plane acquisition",
-            "optional": true
-        }
-    },
-    "label": "Hyperfine: generate isotropic image from orthogonal acquisition planes",
+    "command": "python /flywheel/v0/run.py",
     "license": "MIT",
-    "maintainer": "Niall Bourke <niall.bourke@kcl.ac.uk>",
-    "name": "ciso",
-    "source": "http://www.ncbi.nlm.nih.gov/pubmed/20851191",
+    "label": "Hyperfine: generate isotropic image from orthogonal acquisition planes",
     "url": "https://github.com/ANTsX/ANTs",
-    "version": "BETA.0.0.1"
+    "source": "http://www.ncbi.nlm.nih.gov/pubmed/20851191",
+    "version": "BETA.0.1.9",
+    "flywheel": null
 }

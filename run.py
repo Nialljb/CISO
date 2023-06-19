@@ -21,10 +21,10 @@ def main(context: GearToolkitContext) -> None:
     """Parses config and runs."""
     # gear_inputs, gear_options, app_options = parse_config(context) # Is this parse is redundent? files are parsed in shell script
 
-    # if folder is empty?
-    if not os.listdir('/flywheel/v0/input/cor') or not os.listdir('/flywheel/v0/input/sag'):
+    # If one input is given no sub folders are created, so check if these exist, if not run find_files
+    # if not os.listdir('/flywheel/v0/input/cor') or not os.listdir('/flywheel/v0/input/sag'):
+    if not os.path.exists('/flywheel/v0/input/cor') or not os.path.exists('/flywheel/v0/input/sag'):
         find_files()
-
 
     # 1. Simple smooth brain version
     command = "/flywheel/v0/app/ciso-gear.sh"
