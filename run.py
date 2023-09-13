@@ -7,8 +7,7 @@ from typing import List, Tuple, Union
 
 # import flywheel functions
 from flywheel_gear_toolkit import GearToolkitContext
-from app.parser import parse_config
-from app.generate_command import generate_command
+
 from app.command_line import exec_command
 from app.findMatchedScans import find_files
 # The gear is split up into 2 main components. The run.py file which is executed
@@ -19,8 +18,6 @@ log = logging.getLogger(__name__)
 
 def main(context: GearToolkitContext) -> None:
     """Parses config and runs."""
-    # gear_inputs, gear_options, app_options = parse_config(context) # Is this parse is redundent? files are parsed in shell script
-
     # If one input is given no sub folders are created, so check if these exist, if not run find_files
     # if not os.listdir('/flywheel/v0/input/cor') or not os.listdir('/flywheel/v0/input/sag'):
     if not os.path.exists('/flywheel/v0/input/cor') or not os.path.exists('/flywheel/v0/input/sag'):
@@ -31,7 +28,6 @@ def main(context: GearToolkitContext) -> None:
     #os.system(command)
 
     # 2. FW control submission run/error logs
-    #command = generate_command(gear_inputs, gear_options, app_options)
     print(command)
     #This is what it is all about
     exec_command(

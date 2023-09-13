@@ -91,14 +91,19 @@
             "type": "string"
         },
         "target_template": {
-            "default": "MNI152_T1_1mm.nii.gz",
+            "default": "MNI152_T1_1mm.nii",
             "description": "Use this volume as the target of all inputs. When set to None, the script will create an unbiased starting point by averaging all inputs.",
             "enum": [
-                "MNI152_T1_1mm.nii.gz",
+                "MNI152_T1_1mm.nii",
                 "None",
                 "BCP-00M-T2.nii",
+                "BCP-01M-T2.nii",
                 "BCP-03M-T2.nii",
                 "BCP-06M-T2.nii",
+                "BCP-09M-T2.nii",
+                "BCP-12M-T2.nii",
+                "BCP-18M-T2.nii",
+                "BCP-24M-T2.nii",
                 "nihpd_asym_00-02_t2w.nii",
                 "nihpd_asym_02-05_t2w.nii",
                 "nihpd_asym_05-08_t2w.nii",
@@ -167,7 +172,7 @@
         },
         "gear-builder": {
             "category": "analysis",
-            "image": "flywheel/ciso:BETA.0.0.1"
+            "image": "flywheel/ciso:BETA.0.1.2"
         },
         "kcl-app-binary": "app/ciso-gear.sh",
         "kcl-app-modalities": [
@@ -209,8 +214,8 @@
         },
         "axi": {
             "base": "file",
-            "description": "Axial plane acquisition",
-            "optional": false
+            "optional": false,
+            "description": "Axial plane acquisition"
         },
         "cor": {
             "base": "file",
@@ -223,11 +228,11 @@
             "optional": true
         }
     },
-    "label": "Hyperfine: generate isotropic image from orthogonal acquisition planes",
     "license": "MIT",
+    "label": "Hyperfine: generate isotropic image from orthogonal acquisition planes",
     "maintainer": "Niall Bourke <niall.bourke@kcl.ac.uk>",
     "name": "ciso",
-    "source": "http://www.ncbi.nlm.nih.gov/pubmed/20851191",
     "url": "https://github.com/ANTsX/ANTs",
-    "version": "BETA.0.0.1"
+    "source": "http://www.ncbi.nlm.nih.gov/pubmed/20851191",
+    "version": "BETA.0.1.2"
 }

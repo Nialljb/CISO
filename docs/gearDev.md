@@ -31,7 +31,7 @@ upload gear to flywheel instance (requires being signed in)
 * This may take a while to start running, but we now have the config options saved as we need and can instsantly downlaod the job from the command line. This gives us the full Flywheel structure which will help for debugging. 
 
 ### Then, run:
-> fw-beta job pull <my_job_id> . 
+> fw-beta job pull <my_job_id> 
 
 **requires site admin privlidges** 
 - fw-beta will download the gear Docker image if not present, plus the gear inputs, config, etc., in a folder called <my_gear_name>-<my_gear_version>-<my_job_id>
@@ -68,7 +68,7 @@ docker run -it --entrypoint /bin/bash <image>
  `\` allows continuation on return
  Can manually specify entry point to bash if different in Dockerfile, so as to easily navigate
 
-> docker run -it --rm -v ""\
+> docker run -it --rm --entrypoint bash \
         flywheel/ciso:0.0.1-beta
 
 The structure of this container is how the Flywheel instance sees it so now can debug easier by checking the input folder and config.json to make sure they match. There will be sample data there now from Flywheel that was specified by the user on the instance. 

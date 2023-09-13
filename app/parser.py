@@ -3,64 +3,64 @@
 from typing import Tuple
 from flywheel_gear_toolkit import GearToolkitContext
 
+def findAge(file_obj):
+    file_obj = file_obj.reload()
+    # print("file_obj: ", file_obj)
+    sessionID = file_obj.parents['session']
+    session = fw.get(sessionID)
+    print("session: ", session.label)
+
+    if 'PatientBirthDate' in file_obj.info:
+        # Get dates from dicom header
+        dob = file_obj.info['PatientBirthDate']
+        seriesDate = file_obj.info['SeriesDate']
+        # Calculate age at scan
+        age = (datetime.strptime(seriesDate, '%Y%m%d')) - (datetime.strptime(dob, '%Y%m%d'))
+        age = age.days
+    elif 'PatientAge' in file_obj.info:
+        print("No DOB in dicom header! Trying PatientAge...")
+        age = file_obj.info['PatientAge']
+        # Need to drop the 'D' from the age and convert to int
+        age = re.sub('\D', '', age)
+        age = int(age)
+    elif session.age != None:
+        print("No DOB or age in dicom header! Checking session infomation label...")
+        age = int(session.age / 365 / 24 / 60 / 60) # This is in seconds
+    else:
+        print("No age at scan in session info label! Ask PI...")
+        age = 0
+    # Make sure age is positive
+    if age < 0:
+        age = age * -1
+
+    return age
+
 def parse_config(
     gear_context: GearToolkitContext,
-     
-) -> Tuple[dict, dict, dict]: # Add dict for each set of outputs
-    """Parse the config and other options from the context, both gear and app options.
+) -> Tuple[str]:
+    """Parses the config info.
+    Args:
+        gear_context: Context.
 
     Returns:
-        gear_inputs
-        gear_options: options for the gear
-        app_options: options to pass to the app
-    """
-
-    # Gear Inputs
-    # Changed to call directly (user input)
-    gear_inputs = {
-        "axi": gear_context.get_input_path("axi"), #.get("location").path("path"), # label in manifest
-        "cor": gear_context.get_input_path("cor"),
-        "sag": gear_context.get_input_path("sag")
-    }
-
-
-    # ##   Gear config   ## #
-    # some options here not relevent/called
-    # Manifest options can be set by Dev (not seen by user). These can be altered in the manifest and avoids needing to change anything else
-    # Config options are those to be selected by user (can also have default values)
-    gear_options = {
-        "kcl-app-binary": gear_context.manifest.get("custom").get("kcl-app-binary"),
-        "kcl-app-modalities": gear_context.manifest.get("custom").get("kcl-app-modalities"),
-        "analysis-level": gear_context.manifest.get("custom").get("analysis-level"),
-        "output-dir": gear_context.output_dir,
-        "destination-id": gear_context.destination["id"],
-        "work-dir": gear_context.work_dir,
-        "client": gear_context.client,
-    }
-
-    # set the output dir name:
-    gear_options["output_analysis_id_dir"] = (
-        gear_options["output-dir"] / gear_options["destination-id"]
-    )
-
-    # ##   App options:   ## #
-    """ Notes on inputs:  These notes follow the input order as documented here:
-    https://github.com/ANTsX/ANTs/blob/master/Scripts/antsMultivariateTemplateConstruction2.sh 
+        Tuple of target_template
 
     """
+    target_template = gear_context.config.get("target_template")
+    if target_template is None:
+        print("target_template is not defined in config.")
+        
+        findAge(file_obj)
 
-    app_options_keys = [
-    "imageDimension", # d
-    "Iteration", # i
-    "similarityMetric", # m
-    "transformationModel", # t
-    "prefix", # o
-    "target_template"
-]
-    # keys here should be pulled from config (file generated after user selections on platform).
-    # These may still be manifest defaults but allows user input
-    # If pulled directly from manifest will not collect user choices. 
-    app_options = {key: gear_context.config.get(key) for key in app_options_keys}
 
-    # gear_inputs, 
-    return gear_inputs, gear_options, app_options
+
+
+
+
+
+
+
+
+
+
+    return target_template

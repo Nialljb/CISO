@@ -13,8 +13,11 @@ FLYWHEEL_BASE=/flywheel/v0
 INPUT_DIR=$FLYWHEEL_BASE/input
 CONTAINER='[flywheel/hyperfine-ciso]'
 work=/flywheel/v0/work
+mkdir -p ${work}
+
 ##############################################################################
 
+# Check for required files
 # Parse configuration
 function parse_config {
 
@@ -28,7 +31,7 @@ function parse_config {
     echo "$(cat $MANIFEST_FILE | jq -r '.config.'$1'.default')"
   fi
 }
-
+ 
 # define app options
 imageDimension="$(parse_config 'imageDimension')" # `jq -r '.config.imageDimension ' /flywheel/v0/config.json`
 Iteration="$(parse_config 'Iteration')" #`jq -r '.config.Iteration ' /flywheel/v0/config.json`
@@ -49,60 +52,59 @@ sag_input_file=`find $INPUT_DIR/sag -iname '*.nii' -o -iname '*.nii.gz'`
 # Check that input file exists
 if [[ -e $axi_input_file ]] && [[ -e $cor_input_file ]] && [[ -e $sag_input_file ]]; then
     echo "${CONTAINER}  Input file found: ${axi_input_file}"
+    cp ${axi_input_file} ${work}/T2w_AXI.nii.gz
     echo "${CONTAINER}  Input file found: ${cor_input_file}"
+    cp ${cor_input_file} ${work}/T2w_COR.nii.gz 
     echo "${CONTAINER}  Input file found: ${sag_input_file}"
+    cp ${sag_input_file} ${work}/T2w_SAG.nii.gz
 else
   echo "${CONTAINER} Missing one or more Nifti inputs within input directory $INPUT_DIR"
+  echo "${CONTAINER} Exiting..."
   exit 1
 fi
 
-# Put in one directory (removing the brackets)
-cp ${axi_input_file} $work/T2w_AXI.nii.gz
-cp ${cor_input_file} $work/T2w_COR.nii.gz 
-cp ${sag_input_file} $work/T2w_SAG.nii.gz
-
+echo "work directory contents:"
+echo "$(ls -l $work)"
 ##############################################################################
 # Run hyperfine-ciso algorithm
-
-# Set initial exit status
-hyperfine_ciso_exit_status=0
+echo "${CONTAINER}  Running hyperfine-ciso algorithm"
 
 # Pre-registration
 if [ "$(ls -A $work)" ]; then
   for ii in `ls $work`;
       do
       echo "Registering ${ii} to ${target_template}"
-      antsRegistrationSyN.sh -d ${imageDimension} -f /flywheel/v0/app/templates/${target_template} -m $work/${ii} -o $work/reg_${ii}
+      outname=`basename ${ii} .nii.gz`
+      # echo "outname is: $outname"
+      antsRegistrationSyN.sh -d ${imageDimension} -f /flywheel/v0/app/templates/${target_template} -m $work/${ii} -o $work/reg_${outname}_
   done
-  hyperfine_ciso_exit_status=$?
+else
+  echo "${CONTAINER}  Pre-registration: No files found in $work"
+  echo "${CONTAINER}  Exiting..."
+  exit 1
 fi
 
 # Collect output from registration
-triplane_input=`ls $work/reg_*nii.gzWarped.nii.gz`
+triplane_input=`ls $work/reg_*_Warped.nii.gz`
+echo "Files for reconstruction: "
 echo ${triplane_input}
 
 # Check for registered files and smush them together
 if [[ ! -z $triplane_input ]]; then
     echo "Running antsMultivariateTemplateConstruction2.sh"
     antsMultivariateTemplateConstruction2.sh -d ${imageDimension} -i ${Iteration} -r 1 -f 4x2x1 -s 2x1x0vox -q 30x20x4 -t ${transformationModel} -m ${similarityMetric} -o ${work}/${prefix} ${triplane_input}
-    hyperfine_ciso_exit_status=$?
 fi
+
 # Check isotantsMultivariateTemplateConstruction2.sh completed & clean up output
 if [[ -e $work/${prefix}template0.nii.gz ]]; then
     echo "Isotropic image generated from othogonal aquisitions"
     echo "Cleaning up..."
     mv $work/${prefix}template0.nii.gz /flywheel/v0/output/${prefix}.nii.gz
-    mv $work/reg_*nii.gzWarped.nii.gz /flywheel/v0/output/
-    hyperfine_ciso_exit_status=$?
-fi
-
-##############################################################################
-# Handle Exit status
-
-if [[ $hyperfine_ciso_exit_status == 0 ]]; then
-  echo -e "${CONTAINER} Success!"
-  exit 0
+    mv $work/reg_*_Warped.nii.gz /flywheel/v0/output/
 else
-  echo "${CONTAINER}  Something went wrong! hyperfine-ciso exited non-zero!"
-  exit 1
+    echo "${CONTAINER} Template not generated!"
+    echo "Work directory contents:"
+    ls -l $work
+    echo "${CONTAINER} Exiting..."
+    exit 1
 fi
