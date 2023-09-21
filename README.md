@@ -1,9 +1,5 @@
 # Hyperfine - Construction of isotropic image from tri-plane othogonal aquisitions
 
-This gear runs ... on
-[BIDS-curated data](https://bids.neuroimaging.io/).
-
-
 ## Overview
 
 [Usage](#usage)
@@ -44,14 +40,6 @@ Inputs:
 
 ### Inputs
 
-* bidsignore
-  * **Name**: bidsignore
-  * **Type**: object
-  * **Optional**: true
-  * **Classification**: file
-  * **Description**: A .bidsignore file to provide to the bids-validator that this gear
-runs before running the main command.
-
 * api-key
   * **Name**: api-key
   * **Type**: object
@@ -59,19 +47,29 @@ runs before running the main command.
   * **Classification**: api-key
   * **Description**: Flywheel API key.
 
+* axi
+  * **Name**: sxi
+  * **Type**: file
+  * **Optional**: false
+  * **Classification**: file
+  * **Description**: Axial plane acquisition
+  
+* sag
+  * **Name**: sag
+  * **Type**: file
+  * **Optional**: false
+  * **Classification**: file
+  * **Description**: Sagital plane acquisition
+  
+* cor
+  * **Name**: cor
+  * **Type**: file
+  * **Optional**: false
+  * **Classification**: file
+  * **Description**: Coronal plane acquisition
+        }
+
 ### Config
-
-* debug
-  * **Name**: debug
-  * **Type**: boolean
-  * **Description**: Log debug messages
-  * **Default**: false
-
-* acquisition_type
-  * **Name**: acquisition_type
-  * **Type**: string
-  * **Description**: select a specific acquisition type to be processed.
-  * **Optional**: true
 
 * template
   * **Name**: template
@@ -129,13 +127,12 @@ A picture and description of the workflow
 
 ```mermaid
   graph LR;
-    A[T1w]:::input --> FW;
+    A[T2w]:::input --> FW;
     FW[FW] --> FMI;
     FMI((file-metadata-importer)):::gear --> FC;
     FC((file-classifier)):::gear --> D2N;
-    D2N((dcm2niix)):::gear --> CB;
-    CB((curate-bids)):::gear --> BQP;
-    BQP((ciso)):::gear --> ANA;
+    D2N((dcm2niix)):::gear --> CISO;
+    CISO((ciso)):::gear --> ANA;
     ANA[Analysis]:::container;
     
     classDef container fill:#57d,color:#fff
@@ -151,7 +148,6 @@ Description of workflow
    2. file classifier
    3. dcm2niix
    4. MRIQC (optional)
-   5. curate bids
 3. Select either a subject or a session.
 4. Run the ciso gear
 5. Gear places output in Analysis
