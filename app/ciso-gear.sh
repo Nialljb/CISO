@@ -69,6 +69,10 @@ echo "$(ls -l $work)"
 # Run hyperfine-ciso algorithm
 echo "${CONTAINER}  Running hyperfine-ciso algorithm"
 
+
+# Resample high resolution template to match input (1.5mm)
+ResampleImageBySpacing 3 /flywheel/v0/app/templates/${target_template} /flywheel/v0/app/templates/resampled_${target_template} 1.5 1.5 1.5
+
 # Pre-registration
 if [ "$(ls -A $work)" ]; then
   for ii in `ls $work`;
@@ -76,7 +80,7 @@ if [ "$(ls -A $work)" ]; then
       echo "Registering ${ii} to ${target_template}"
       outname=`basename ${ii} .nii.gz`
       # echo "outname is: $outname"
-      antsRegistrationSyN.sh -d ${imageDimension} -f /flywheel/v0/app/templates/${target_template} -m $work/${ii} -o $work/reg_${outname}_
+      antsRegistrationSyN.sh -d ${imageDimension} -f /flywheel/v0/app/templates/resampled_${target_template} -m $work/${ii} -o $work/reg_${outname}_
   done
 else
   echo "${CONTAINER}  Pre-registration: No files found in $work"
