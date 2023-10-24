@@ -73,7 +73,7 @@ echo "${CONTAINER}  Running hyperfine-ciso algorithm"
 if [[ $phantom == "true" ]]; then
     echo "Phantom data detected"
     echo "Running antsMultivariateTemplateConstruction2.sh"
-    antsMultivariateTemplateConstruction2.sh -d ${imageDimension} -i ${Iteration} -r 1 -f 4x2x1 -s 2x1x0vox -q 30x20x4 -t ${transformationModel} -m ${similarityMetric} -o ${work}/${prefix} ${work}/T2w_AXI.nii.gz ${work}/T2w_COR.nii.gz ${work}/T2w_SAG.nii.gz
+    antsMultivariateTemplateConstruction2.sh -d ${imageDimension} -i ${Iteration} -r 1 -f 4x2x1 -s 2x1x0vox -q 30x20x4 -t ${transformationModel} -m ${similarityMetric} -o ${work}/phantom_${prefix} ${work}/T2w_AXI.nii.gz ${work}/T2w_COR.nii.gz ${work}/T2w_SAG.nii.gz
     echo "Cleaning up..."
     mv $work/${prefix}template0.nii.gz /flywheel/v0/output/${prefix}.nii.gz
     mv $work/reg_*_Warped.nii.gz /flywheel/v0/output/
