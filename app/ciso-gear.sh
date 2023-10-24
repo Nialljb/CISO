@@ -39,6 +39,7 @@ transformationModel="$(parse_config 'transformationModel')"   # `jq -r '.config.
 similarityMetric="$(parse_config 'similarityMetric')"   #`jq -r '.config.similarityMetric ' /flywheel/v0/config.json`
 target_template="$(parse_config 'target_template')"    #`jq -r '.config.target_template ' /flywheel/v0/config.json`
 prefix="$(parse_config 'prefix')" #`jq -r '.config.prefix ' /flywheel/v0/config.json`
+phantom="$(parse_config 'phantom')" #`jq -r '.config.prefix ' /flywheel/v0/config.json`
 
 ##############################################################################
 # Handle INPUT file
@@ -69,46 +70,58 @@ echo "$(ls -l $work)"
 # Run hyperfine-ciso algorithm
 echo "${CONTAINER}  Running hyperfine-ciso algorithm"
 
-
-# Resample high resolution template to match input (1.5mm)
-ResampleImageBySpacing 3 /flywheel/v0/app/templates/${target_template} /flywheel/v0/app/templates/resampled_${target_template} 1.5 1.5 1.5
-
-# Pre-registration
-if [ "$(ls -A $work)" ]; then
-  for ii in `ls $work`;
-      do
-      echo "Registering ${ii} to ${target_template}"
-      outname=`basename ${ii} .nii.gz`
-      # echo "outname is: $outname"
-      antsRegistrationSyN.sh -d ${imageDimension} -f /flywheel/v0/app/templates/resampled_${target_template} -m $work/${ii} -o $work/reg_${outname}_
-  done
-else
-  echo "${CONTAINER}  Pre-registration: No files found in $work"
-  echo "${CONTAINER}  Exiting..."
-  exit 1
-fi
-
-# Collect output from registration
-triplane_input=`ls $work/reg_*_Warped.nii.gz`
-echo "Files for reconstruction: "
-echo ${triplane_input}
-
-# Check for registered files and smush them together
-if [[ ! -z $triplane_input ]]; then
+if [[ $phantom == "true" ]]; then
+    echo "Phantom data detected"
     echo "Running antsMultivariateTemplateConstruction2.sh"
-    antsMultivariateTemplateConstruction2.sh -d ${imageDimension} -i ${Iteration} -r 1 -f 4x2x1 -s 2x1x0vox -q 30x20x4 -t ${transformationModel} -m ${similarityMetric} -o ${work}/${prefix} ${triplane_input}
-fi
-
-# Check isotantsMultivariateTemplateConstruction2.sh completed & clean up output
-if [[ -e $work/${prefix}template0.nii.gz ]]; then
-    echo "Isotropic image generated from othogonal aquisitions"
+    antsMultivariateTemplateConstruction2.sh -d ${imageDimension} -i ${Iteration} -r 1 -f 4x2x1 -s 2x1x0vox -q 30x20x4 -t ${transformationModel} -m ${similarityMetric} -o ${work}/${prefix} ${work}/T2w_AXI.nii.gz ${work}/T2w_COR.nii.gz ${work}/T2w_SAG.nii.gz
     echo "Cleaning up..."
     mv $work/${prefix}template0.nii.gz /flywheel/v0/output/${prefix}.nii.gz
     mv $work/reg_*_Warped.nii.gz /flywheel/v0/output/
+    exit 0
+
 else
-    echo "${CONTAINER} Template not generated!"
-    echo "Work directory contents:"
-    ls -l $work
-    echo "${CONTAINER} Exiting..."
+  echo "Assuming in-vivo data"
+  echo "Resampling template to match input resolution 1.5mm"
+  # Resample high resolution template to match input (1.5mm)
+  ResampleImageBySpacing 3 /flywheel/v0/app/templates/${target_template} /flywheel/v0/app/templates/resampled_${target_template} 1.5 1.5 1.5
+
+  # Pre-registration
+  if [ "$(ls -A $work)" ]; then
+    for ii in `ls $work`;
+        do
+        echo "Registering ${ii} to ${target_template}"
+        outname=`basename ${ii} .nii.gz`
+        # echo "outname is: $outname"
+        antsRegistrationSyN.sh -d ${imageDimension} -f /flywheel/v0/app/templates/resampled_${target_template} -m $work/${ii} -o $work/reg_${outname}_
+    done
+  else
+    echo "${CONTAINER}  Pre-registration: No files found in $work"
+    echo "${CONTAINER}  Exiting..."
     exit 1
+  fi
+
+  # Collect output from registration
+  triplane_input=`ls $work/reg_*_Warped.nii.gz`
+  echo "Files for reconstruction: "
+  echo ${triplane_input}
+
+  # Check for registered files and smush them together
+  if [[ ! -z $triplane_input ]]; then
+      echo "Running antsMultivariateTemplateConstruction2.sh"
+      antsMultivariateTemplateConstruction2.sh -d ${imageDimension} -i ${Iteration} -r 1 -f 4x2x1 -s 2x1x0vox -q 30x20x4 -t ${transformationModel} -m ${similarityMetric} -o ${work}/${prefix} ${triplane_input}
+  fi
+
+  # Check isotantsMultivariateTemplateConstruction2.sh completed & clean up output
+  if [[ -e $work/${prefix}template0.nii.gz ]]; then
+      echo "Isotropic image generated from othogonal aquisitions"
+      echo "Cleaning up..."
+      mv $work/${prefix}template0.nii.gz /flywheel/v0/output/${prefix}.nii.gz
+      mv $work/reg_*_Warped.nii.gz /flywheel/v0/output/
+  else
+      echo "${CONTAINER} Template not generated!"
+      echo "Work directory contents:"
+      ls -l $work
+      echo "${CONTAINER} Exiting..."
+      exit 1
+  fi
 fi
