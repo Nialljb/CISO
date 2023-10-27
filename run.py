@@ -10,6 +10,7 @@ from flywheel_gear_toolkit import GearToolkitContext
 
 from app.command_line import exec_command
 from app.findMatchedScans import find_files
+from utils.niftiHeader import pixSize
 # The gear is split up into 2 main components. The run.py file which is executed
 # when the container runs. The run.py file then imports the rest of the gear as a
 # module.
@@ -23,8 +24,10 @@ def main(context: GearToolkitContext) -> None:
     if not os.path.exists('/flywheel/v0/input/cor') or not os.path.exists('/flywheel/v0/input/sag'):
         find_files()
 
+    pixdim = pixSize()
+
     # 1. Simple smooth brain version
-    command = "/flywheel/v0/app/ciso-gear.sh"
+    command = "/flywheel/v0/app/ciso-gear.sh" + " " + str(pixdim)
     #os.system(command)
 
     # 2. FW control submission run/error logs

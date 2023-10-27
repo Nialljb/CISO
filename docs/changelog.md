@@ -16,3 +16,8 @@ https://sourceforge.net/p/advants/discussion/840261/thread/045b1a1d/
 - remove unused config options
 - Update to include phantom flag
 
+27/10/2023
+"version": "0.2.3"
+- Updated self-reference phantom processing
+- BETA brain self-reference processing
+- nifti reader function for voxel dimensions (not called)
