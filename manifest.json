@@ -136,7 +136,7 @@
         },
         "gear-builder": {
             "category": "analysis",
-            "image": "flywheel/ciso:0.2.3"
+            "image": "flywheel/ciso:0.2.4"
         },
         "kcl-app-binary": "app/ciso-gear.sh",
         "kcl-app-modalities": [
@@ -198,5 +198,5 @@
     "name": "ciso",
     "url": "https://github.com/ANTsX/ANTs",
     "source": "http://www.ncbi.nlm.nih.gov/pubmed/20851191",
-    "version": "0.2.3"
+    "version": "0.2.4"
 }

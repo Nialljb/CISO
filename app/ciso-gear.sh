@@ -53,6 +53,12 @@ axi_input_file=`find $INPUT_DIR/axi -iname '*.nii' -o -iname '*.nii.gz'`
 cor_input_file=`find $INPUT_DIR/cor -iname '*.nii' -o -iname '*.nii.gz'`
 sag_input_file=`find $INPUT_DIR/sag -iname '*.nii' -o -iname '*.nii.gz'`
 
+if [[ "$axi_input_file" == *"Fast"* ]]; then
+    echo "Fast detected in axi_input_file"
+    prefix=${prefix}_fast
+    echo "prefix is now: $prefix"
+fi
+
 # Check that input file exists
 if [[ -e $axi_input_file ]] && [[ -e $cor_input_file ]] && [[ -e $sag_input_file ]]; then
     echo "${CONTAINER}  Input file found: ${axi_input_file}"
