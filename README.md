@@ -7,13 +7,18 @@
 [FAQ](#faq)
 
 ### Summary
-Takes three orthogonally acquired images (axial, coronal, sagittal) collected on Hyperfine Swoop and combines into a single 1mm isotropic image. 
+Takes three orthogonally acquired images (axial, coronal, sagittal) collected on Hyperfine Swoop and combines into a single 1.5mm isotropic image. 
 
 Inputs: 
 -	Axial
 -	Coronal
 -	Sagittal
--	Template (age-matched)
+-	Template (age-matched) [now optional]
+
+If no age matched template is provided, the algorithm will attempt to first make an initial template by rigid regisitration of all images to the axial plane.
+This will then be the reference for isotropic reconstruction.
+
+There is now also a feature in the configuration to select if a phantom is being reconstructed. 
 
 ### Cite
 

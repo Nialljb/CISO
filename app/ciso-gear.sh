@@ -97,9 +97,11 @@ else
 
   echo "Processing in-vivo data..."
   if [[ $target_template == "None" ]]; then
+    echo "***"
     echo "No target template specified, trying self-reference..."
     echo "WARNING: BETA FEATURE - May not work as expected..."
     echo "Check output for quality control!"
+    echo "***"
     
     # Create a template from the 3 T2 images
     echo "Running antsMultivariateTemplateConstruction2.sh with rigid registration to axial image..."
