@@ -1,0 +1,32 @@
+[tool.poetry]
+name = "ciso-0.0.2-beta"
+version = "1.0.3"
+description = "ciso 0.0.1 ciso processes 3 othogonal aquisitions into a single isotropic image"
+authors = ["Niall J. Bourke, Flywheel <support@flywheel.io>"]
+readme = "README.md"
+license = "MIT"
+keywords = [
+    "Flywheel",
+    "Gears"
+]
+repository = "https://github.com/Nialljb/CISO"
+classifiers = [
+    "Topic :: Scientific/Engineering"
+]
+
+[tool.poetry.dependencies]
+python = "^3.8.10"
+flywheel-gear-toolkit = "^0.6.6"
+flywheel-sdk = "^16.8.0"
+psutil = "^5.9.0"
+flywheel-bids = {git = "https://gitlab.com/flywheel-io/public/bids-client.git", rev = "master"}
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.1.2"
+pytest-cov = "^2.10.1"
+pytest-mock = "^3.3.1"
+
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.core.masonry.api"
