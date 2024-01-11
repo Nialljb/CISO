@@ -20,5 +20,4 @@
 #
 ## Ignore the "assets" or "data" folder that might be inside "tests"
 !app/templates
-#tests/assets
-#tests/data
+!app/test

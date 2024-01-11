@@ -13,6 +13,7 @@ RUN apt-get update && \
     apt-get clean && \
     pip install flywheel-gear-toolkit && \
     pip install flywheel-sdk && \
+    pip install nibabel && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Installing main dependencies

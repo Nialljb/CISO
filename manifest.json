@@ -3,32 +3,12 @@
     "cite": "A reproducible evaluation of ANTs similarity metric performance in brain image registration: Avants BB, Tustison NJ, Song G, Cook PA, Klein A, Gee JC. Neuroimage, 2011. http://www.ncbi.nlm.nih.gov/pubmed/20851191",
     "command": "python /flywheel/v0/run.py",
     "config": {
-        "debug": {
-            "default": false,
-            "description": "Log debug messages",
-            "type": "boolean"
-        },
         "imageDimension": {
             "default": 3,
             "description": "ImageDimension: 2 or 3 (for 2 or 3 dimensional registration of single volume)\nImageDimension: 4 (for template generation of time-series data)",
             "maximum": 4,
             "minimum": 2,
             "type": "integer"
-        },
-        "Input Glob Pattern": {
-            "default": "",
-            "description": "Glob pattern (Unix style pathname pattern expansion) that matches filename to be used as inputs. (Default ''). https://en.wikipedia.org/wiki/Glob_(programming).",
-            "type": "string"
-        },
-        "Input Regex": {
-            "default": ".*nii\\.gz",
-            "description": "Regular expression that matches filenames to be used as inputs. (Default '.*nii\\.gz'). https://en.wikipedia.org/wiki/Regular_expression.",
-            "type": "string"
-        },
-        "Input Tags": {
-            "default": "",
-            "description": "Tag(s) that matches files to be used as inputs. When multiple tags are specified, they must be comma separated (e.g. T1template,ANTs)",
-            "type": "string"
         },
         "Iteration": {
             "default": 4,
@@ -42,11 +22,6 @@
             "description": "Max-iterations\nMax-Iterations in form: JxKxL where\n  J = max iterations at coarsest resolution (here, reduce by power of 2^2)\n\tK = middle resolution iterations (here,reduce by power of 2)\n\tL = fine resolution iterations (here, full resolution) !!this level takes much more time per iteration!!\nAdding an extra value before JxKxL (i.e. resulting in IxJxKxL) would add another iteration level.",
             "type": "string"
         },
-        "mem_mb": {
-            "description": "Maximum memory to use (MB). Leave blank or set to 0 to use the maximum available in the system.",
-            "optional": true,
-            "type": "integer"
-        },
         "modalityNum": {
             "default": 1,
             "description": "Number of modalities used to construct the template (default 1):  For example, if one wanted to create a multimodal template consisting of T1,T2,and FA components",
@@ -54,10 +29,10 @@
             "minimum": 1,
             "type": "integer"
         },
-        "n_cpus": {
-            "description": "Number of CPUs/cores to use. Leave blank or set to 0 to use the maximum available in the system.",
+        "phantom": {
+            "description": "Input is phantom image. 0 = false, 1 = true",
             "optional": true,
-            "type": "integer"
+            "type": "boolean"
         },
         "prefix": {
             "default": "isotropicReconstruction",
@@ -137,17 +112,6 @@
                 "s"
             ],
             "type": "string"
-        },
-        "verbose": {
-            "default": "v",
-            "description": "increases log verbosity for each occurrence, debug level is -vvv",
-            "enum": [
-                "",
-                "v",
-                "vv",
-                "vvv"
-            ],
-            "type": "string"
         }
     },
     "custom": {
@@ -172,7 +136,7 @@
         },
         "gear-builder": {
             "category": "analysis",
-            "image": "flywheel/ciso:0.2.0"
+            "image": "flywheel/ciso:0.2.6"
         },
         "kcl-app-binary": "app/ciso-gear.sh",
         "kcl-app-modalities": [
@@ -192,7 +156,7 @@
             "non-commercial-use-only": false
         }
     },
-    "description": "ANTs based gear that runs antsMultivariateTemplateConstruction2.sh script to generate an isotropic image by co-registering a set of multiplanar input images. **MOST RECENT VERSION UNDER TEST. LAST WORKING VERSION 0.1.8**",
+    "description": "ANTs based gear that runs antsMultivariateTemplateConstruction2.sh script to generate an isotropic image by co-registering a set of multiplanar input images.",
     "environment": {
         "ANTSPATH": "/opt/ants/bin/",
         "CONDA_DIR": "/opt/conda",
@@ -234,5 +198,5 @@
     "name": "ciso",
     "url": "https://github.com/ANTsX/ANTs",
     "source": "http://www.ncbi.nlm.nih.gov/pubmed/20851191",
-    "version": "0.2.0"
+    "version": "0.2.6"
 }
