@@ -20,22 +20,17 @@ log = logging.getLogger(__name__)
 def main(context: GearToolkitContext) -> None:
     """Parses config and runs."""
     # If one input is given no sub folders are created, so check if these exist, if not run find_files
-    # if not os.listdir('/flywheel/v0/input/cor') or not os.listdir('/flywheel/v0/input/sag'):
     if not os.path.exists('/flywheel/v0/input/cor') or not os.path.exists('/flywheel/v0/input/sag'):
         find_files()
 
+    # Get pixel size from nifti header
     pixdim = pixSize()
 
-    # 1. Simple smooth brain version
+    # Main event
     command = "/flywheel/v0/app/ciso-gear.sh" + " " + str(pixdim)
-    #os.system(command)
-
-    # 2. FW control submission run/error logs
     print(command)
-    #This is what it is all about
     exec_command(
     command,
-    #dry_run=gear_options["dry-run"],
     shell=True,
     cont_output=True,
         )

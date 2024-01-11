@@ -1,6 +1,7 @@
 import os
 import flywheel
 import json
+import fnmatch
 
 # Read config.json file to:
 # 1. Get the API key
@@ -34,35 +35,69 @@ def find_files():
         session_container = fw.get(session_id)
         print("session_container is : ", session_container.label)
 
-    # get the acquisition from the session
-    for acq in session_container.acquisitions.iter():
-        if 'T2' in acq.label: # restrict to T2 acquisitions
-            for file in acq.files: # get the files in the acquisition
-                # Screen file object information & download the desired file
-                if file['type'] == 'nifti' and 'T2' in file.name:
-                    if 'SAG' in file.name:
-                        sag = file
-                        print("sag is : ", sag.name)
-                        download_dir = ('/flywheel/v0/input/sag')
-                        if not os.path.exists(download_dir):
-                            os.mkdir(download_dir)
-                        download_path = download_dir + '/' + sag.name
-                        sag.download(download_path)
+    # --- fast vs slow --- #
+    speed = 'standard'
+    for file in os.listdir('/flywheel/v0/input/axi/'):
+        if fnmatch.fnmatch(file, '*Fast*'):
+            speed = 'Fast'
+        else:
+            speed = 'standard'
 
-                    elif 'COR' in file.name:
-                        cor = file
-                        print("cor is : ", cor.name) 
-                        download_dir = ('/flywheel/v0/input/cor')
-                        if not os.path.exists(download_dir):
-                            os.mkdir(download_dir)
-                        download_path = download_dir + '/' + cor.name
-                        cor.download(download_path)
-                    
-                    elif 'AXI' in file.name and not 'Segmentation' in file.name and not 'Align' in file.name: # Account for new Hyperfine output
-                        axi = file
-                        print("axi is : ", axi.name)
-                        download_dir = ('/flywheel/v0/input/axi')
-                        if not os.path.exists(download_dir):
-                            os.mkdir(download_dir)
-                        download_path = download_dir + '/' + axi.name
-                        axi.download(download_path)
+    if speed == 'Fast':
+        # get the acquisition from the session
+        for acq in session_container.acquisitions.iter():
+            if 'T2' in acq.label: # restrict to T2 acquisitions
+                for file in acq.files: # get the files in the acquisition
+                    # Screen file object information & download the desired file
+                    if file['type'] == 'nifti' and 'T2' in file.name and 'Fast' in file.name:
+                        if 'SAG' in file.name:
+                            sag = file
+                            print("sag is : ", sag.name)
+                            download_dir = ('/flywheel/v0/input/sag')
+                            if not os.path.exists(download_dir):
+                                os.mkdir(download_dir)
+                            download_path = download_dir + '/' + sag.name
+                            sag.download(download_path)
+
+                        elif 'COR' in file.name:
+                            cor = file
+                            print("cor is : ", cor.name) 
+                            download_dir = ('/flywheel/v0/input/cor')
+                            if not os.path.exists(download_dir):
+                                os.mkdir(download_dir)
+                            download_path = download_dir + '/' + cor.name
+                            cor.download(download_path)
+
+    elif speed == 'standard':
+        # get the acquisition from the session
+        for acq in session_container.acquisitions.iter():
+            if 'T2' in acq.label: # restrict to T2 acquisitions
+                for file in acq.files: # get the files in the acquisition
+                    # Screen file object information & download the desired file
+                    if file['type'] == 'nifti' and 'T2' in file.name and 'Fast' not in file.name:
+                        if 'SAG' in file.name:
+                            sag = file
+                            print("sag is : ", sag.name)
+                            download_dir = ('/flywheel/v0/input/sag')
+                            if not os.path.exists(download_dir):
+                                os.mkdir(download_dir)
+                            download_path = download_dir + '/' + sag.name
+                            sag.download(download_path)
+
+                        elif 'COR' in file.name:
+                            cor = file
+                            print("cor is : ", cor.name) 
+                            download_dir = ('/flywheel/v0/input/cor')
+                            if not os.path.exists(download_dir):
+                                os.mkdir(download_dir)
+                            download_path = download_dir + '/' + cor.name
+                            cor.download(download_path)
+                        
+                        # elif 'AXI' in file.name and not 'Segmentation' in file.name and not 'Align' in file.name: # Account for new Hyperfine output
+                        #     axi = file
+                        #     print("axi is : ", axi.name)
+                        #     download_dir = ('/flywheel/v0/input/axi')
+                        #     if not os.path.exists(download_dir):
+                        #         os.mkdir(download_dir)
+                        #     download_path = download_dir + '/' + axi.name
+                        #     axi.download(download_path)

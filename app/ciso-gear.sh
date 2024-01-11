@@ -68,9 +68,25 @@ if [[ -e $axi_input_file ]] && [[ -e $cor_input_file ]] && [[ -e $sag_input_file
     echo "${CONTAINER}  Input file found: ${sag_input_file}"
     cp ${sag_input_file} ${work}/T2w_SAG.nii.gz
 else
-  echo "${CONTAINER} Missing one or more Nifti inputs within input directory $INPUT_DIR"
-  echo "${CONTAINER} Exiting..."
-  exit 1
+  echo "** ${CONTAINER} Missing one or more Nifti inputs within input directory $INPUT_DIR **"
+  prefix=${prefix}-AXI
+  if [[ -e $cor_input_file ]]; then
+    echo "${CONTAINER}  Input file found: ${cor_input_file}"
+    cp ${cor_input_file} ${work}/T2w_COR.nii.gz
+    prefix=${prefix}-COR
+  else
+    echo "${CONTAINER}  Missing coronal input file"
+  fi
+  if [[ -e $sag_input_file ]]; then
+    echo "${CONTAINER}  Input file found: ${sag_input_file}"
+    cp ${sag_input_file} ${work}/T2w_SAG.nii.gz
+    prefix=${prefix}-SAG
+  else
+    echo "${CONTAINER}  Missing sagittal input file"
+  fi
+
+  # echo "${CONTAINER} Exiting..."
+  # exit 1
 fi
 
 echo "work directory contents:"
@@ -105,11 +121,11 @@ else
     
     # Create a template from the 3 T2 images
     echo "Running antsMultivariateTemplateConstruction2.sh with rigid registration to axial image..."
-    antsMultivariateTemplateConstruction2.sh -d ${imageDimension} -i ${Iteration} -z ${work}/T2w_AXI.nii.gz -r 1 -f 4x2x1 -s 2x1x0vox -q 30x20x4 -t ${transformationModel} -m ${similarityMetric} -o ${work}/tmp_${prefix} ${work}/T2w_AXI.nii.gz ${work}/T2w_COR.nii.gz ${work}/T2w_SAG.nii.gz
+    antsMultivariateTemplateConstruction2.sh -d ${imageDimension} -i ${Iteration} -z ${work}/T2w_AXI.nii.gz -r 1 -f 4x2x1 -s 2x1x0vox -q 30x20x4 -t ${transformationModel} -m ${similarityMetric} -o ${work}/tmp_${prefix} ${work}/* #T2w_AXI.nii.gz ${work}/T2w_COR.nii.gz ${work}/T2w_SAG.nii.gz
     echo "Resampling intermediate template to isotropic 1.5mm..."
     ResampleImageBySpacing 3 ${work}/tmp_${prefix} ${work}/resampledTemplate.nii.gz 1.5 1.5 1.5
     echo "Running antsMultivariateTemplateConstruction2.sh with non-linear registration to resampled template..."
-    antsMultivariateTemplateConstruction2.sh -d ${imageDimension} -i ${Iteration} -z ${work}/resampledTemplate.nii.gz -f 4x2x1 -s 2x1x0vox -q 30x20x4 -t ${transformationModel} -m ${similarityMetric} -o ${work}/${prefix} ${work}/T2w_AXI.nii.gz ${work}/T2w_COR.nii.gz ${work}/T2w_SAG.nii.gz
+    antsMultivariateTemplateConstruction2.sh -d ${imageDimension} -i ${Iteration} -z ${work}/resampledTemplate.nii.gz -f 4x2x1 -s 2x1x0vox -q 30x20x4 -t ${transformationModel} -m ${similarityMetric} -o ${work}/${prefix} ${work}/* #T2w_AXI.nii.gz ${work}/T2w_COR.nii.gz ${work}/T2w_SAG.nii.gz
     echo "Cleaning up..."
     mv $work/${prefix}template0.nii.gz /flywheel/v0/output/${prefix}.nii.gz
     exit 0

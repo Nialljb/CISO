@@ -21,3 +21,8 @@ https://sourceforge.net/p/advants/discussion/840261/thread/045b1a1d/
 - Updated self-reference phantom processing
 - BETA brain self-reference processing
 - nifti reader function for voxel dimensions (not called)
+
+10/01/2024
+"version": "0.2.5"
+- Try to catch and process when there is not three acquisitions
+- Add in catch for Fast & standard aquisition
