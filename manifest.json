@@ -1,202 +1,199 @@
 {
-    "author": "Niall Bourke",
-    "cite": "A reproducible evaluation of ANTs similarity metric performance in brain image registration: Avants BB, Tustison NJ, Song G, Cook PA, Klein A, Gee JC. Neuroimage, 2011. http://www.ncbi.nlm.nih.gov/pubmed/20851191",
-    "command": "python /flywheel/v0/run.py",
-    "config": {
-        "imageDimension": {
-            "default": 3,
-            "description": "ImageDimension: 2 or 3 (for 2 or 3 dimensional registration of single volume)\nImageDimension: 4 (for template generation of time-series data)",
-            "maximum": 4,
-            "minimum": 2,
-            "type": "integer"
-        },
-        "Iteration": {
-            "default": 4,
-            "description": "Iteration limit (default 4): iterations of the template construction (Iteration limit)*NumImages registrations.",
-            "maximum": 10,
-            "minimum": 1,
-            "type": "integer"
-        },
-        "maxIterations": {
-            "default": "30x20x4",
-            "description": "Max-iterations\nMax-Iterations in form: JxKxL where\n  J = max iterations at coarsest resolution (here, reduce by power of 2^2)\n\tK = middle resolution iterations (here,reduce by power of 2)\n\tL = fine resolution iterations (here, full resolution) !!this level takes much more time per iteration!!\nAdding an extra value before JxKxL (i.e. resulting in IxJxKxL) would add another iteration level.",
-            "type": "string"
-        },
-        "modalityNum": {
-            "default": 1,
-            "description": "Number of modalities used to construct the template (default 1):  For example, if one wanted to create a multimodal template consisting of T1,T2,and FA components",
-            "maximum": 4,
-            "minimum": 1,
-            "type": "integer"
-        },
-        "phantom": {
-            "description": "Input is phantom image. 0 = false, 1 = true",
-            "optional": true,
-            "type": "boolean"
-        },
-        "prefix": {
-            "default": "isotropicReconstruction",
-            "description": "A prefix that is prepended to all output files.",
-            "type": "string"
-        },
-        "rigidRegistration": {
-            "description": "Do rigid-body registration of inputs before creating template. Only useful when you do not have an initial template.",
-            "optional": true,
-            "type": "boolean"
-        },
-        "shrinkFactor": {
-            "default": "4x2x1",
-            "description": "Shrink factors (default = 6x4x2x1):  Also in the same form as -q max iterations.\u00a0Needs to have the same number of components",
-            "type": "string"
-        },
-        "similarityMetric": {
-            "default": "MI",
-            "description": "Type of similarity metric used for registration.\nFor intramodal image registration, use:\n  CC = cross-correlation\n  MI = mutual information\n  PR = probability mapping\n  MSQ = mean square difference (Demons-like)\n  SSD = sum of squared differences\nFor intermodal image registration, use:\n  MI = mutual information\n  PR = probability mapping\n",
-            "enum": [
-                "CC",
-                "DEMONS",
-                "MI",
-                "MSQ"
-            ],
-            "type": "string"
-        },
-        "smoothingFactor": {
-            "default": "2x1x0vox",
-            "description": "Smoothing factors (default = 3x2x1x0):  Also in the same form as -q max iterations. Needs to have the same number of components.",
-            "type": "string"
-        },
-        "target_template": {
-            "default": "MNI152_T1_1mm.nii",
-            "description": "Use this volume as the target of all inputs. When set to None, the script will create an unbiased starting point by averaging all inputs.",
-            "enum": [
-                "MNI152_T1_1mm.nii",
-                "None",
-                "BCP-00M-T2.nii",
-                "BCP-01M-T2.nii",
-                "BCP-03M-T2.nii",
-                "BCP-06M-T2.nii",
-                "BCP-09M-T2.nii",
-                "BCP-12M-T2.nii",
-                "BCP-18M-T2.nii",
-                "BCP-24M-T2.nii",
-                "nihpd_asym_00-02_t2w.nii",
-                "nihpd_asym_02-05_t2w.nii",
-                "nihpd_asym_05-08_t2w.nii",
-                "nihpd_asym_08-11_t2w.nii",
-                "nihpd_asym_11-14_t2w.nii",
-                "nihpd_asym_14-17_t2w.nii",
-                "nihpd_asym_17-21_t2w.nii",
-                "nihpd_asym_33-44_t2w.nii",
-                "nihpd_asym_44-60_t2w.nii"
-            ],
-            "type": "string"
-        },
-        "transformationModel": {
-            "default": "SyN",
-            "description": "Type of transformation model used for registration (EL = elastic transformation model, SY = SyN with time, arbitrary number of time points, S2 =  SyN with time, optimized for 2 time points, GR = greedy SyN, EX = exponential, DD = diffeomorphic demons style exponential, mapping, RI = purely rigid, RA = Affine rigid)",
-            "enum": [
-                "BSplineSyN",
-                "SyN",
-                "TimeVaryingBSplineVelocityField",
-                "TimeVaryingVelocityField"
-            ],
-            "type": "string"
-        },
-        "transformationType": {
-            "default": "s",
-            "description": "Transform type (antsRegistrationSyN.sh), r: rigid, a: rigid + affine, s: rigid + affine + deformable syn, b: rigid + affine + deformable b-spline syn",
-            "enum": [
-                "a",
-                "b",
-                "r",
-                "s"
-            ],
-            "type": "string"
-        }
+  "author": "Niall Bourke",
+  "cite": "A reproducible evaluation of ANTs similarity metric performance in brain image registration: Avants BB, Tustison NJ, Song G, Cook PA, Klein A, Gee JC. Neuroimage, 2011. http://www.ncbi.nlm.nih.gov/pubmed/20851191",
+  "command": "python /flywheel/v0/run.py",
+  "config": {
+    "imageDimension": {
+      "default": 3,
+      "description": "ImageDimension: 2 or 3 (for 2 or 3 dimensional registration of single volume)\nImageDimension: 4 (for template generation of time-series data)",
+      "maximum": 4,
+      "minimum": 2,
+      "type": "integer"
     },
-    "custom": {
-        "analysis-level": "participant",
-        "flywheel": {
-            "classification": {
-                "components": [
-                    "ANTs"
-                ],
-                "keywords": [
-                    "registration",
-                    "template"
-                ],
-                "modality": [
-                    "MR"
-                ],
-                "type": [
-                    "nifti"
-                ]
-            },
-            "suite": "UNITY Apps"
-        },
-        "gear-builder": {
-            "category": "analysis",
-            "image": "flywheel/ciso:0.2.6"
-        },
-        "kcl-app-binary": "app/ciso-gear.sh",
-        "kcl-app-modalities": [
-            "anat"
+    "Iteration": {
+      "default": 4,
+      "description": "Iteration limit (default 4): iterations of the template construction (Iteration limit)*NumImages registrations.",
+      "maximum": 10,
+      "minimum": 1,
+      "type": "integer"
+    },
+    "maxIterations": {
+      "default": "30x20x4",
+      "description": "Max-iterations\nMax-Iterations in form: JxKxL where\n  J = max iterations at coarsest resolution (here, reduce by power of 2^2)\n\tK = middle resolution iterations (here,reduce by power of 2)\n\tL = fine resolution iterations (here, full resolution) !!this level takes much more time per iteration!!\nAdding an extra value before JxKxL (i.e. resulting in IxJxKxL) would add another iteration level.",
+      "type": "string"
+    },
+    "modalityNum": {
+      "default": 1,
+      "description": "Number of modalities used to construct the template (default 1):  For example, if one wanted to create a multimodal template consisting of T1,T2,and FA components",
+      "maximum": 4,
+      "minimum": 1,
+      "type": "integer"
+    },
+    "phantom": {
+      "description": "Input is phantom image. 0 = false, 1 = true",
+      "optional": true,
+      "type": "boolean"
+    },
+    "prefix": {
+      "default": "isotropicReconstruction",
+      "description": "A prefix that is prepended to all output files.",
+      "type": "string"
+    },
+    "rigidRegistration": {
+      "description": "Do rigid-body registration of inputs before creating template. Only useful when you do not have an initial template.",
+      "optional": true,
+      "type": "boolean"
+    },
+    "shrinkFactor": {
+      "default": "4x2x1",
+      "description": "Shrink factors (default = 6x4x2x1):  Also in the same form as -q max iterations.\u00a0Needs to have the same number of components",
+      "type": "string"
+    },
+    "similarityMetric": {
+      "default": "MI",
+      "description": "Type of similarity metric used for registration.\nFor intramodal image registration, use:\n  CC = cross-correlation\n  MI = mutual information\n  PR = probability mapping\n  MSQ = mean square difference (Demons-like)\n  SSD = sum of squared differences\nFor intermodal image registration, use:\n  MI = mutual information\n  PR = probability mapping\n",
+      "enum": [
+        "CC",
+        "DEMONS",
+        "MI",
+        "MSQ"
+      ],
+      "type": "string"
+    },
+    "smoothingFactor": {
+      "default": "2x1x0vox",
+      "description": "Smoothing factors (default = 3x2x1x0):  Also in the same form as -q max iterations. Needs to have the same number of components.",
+      "type": "string"
+    },
+    "target_template": {
+      "default": "mni_icbm152_t2_tal_nlin_asym_55_ext.nii",
+      "description": "Use this volume as the target of all inputs. When set to None, the script will create an unbiased starting point by averaging all inputs.",
+      "enum": [
+        "None",
+        "nihpd_asym_00-02_t2w.nii",
+        "nihpd_asym_02-05_t2w.nii",
+        "nihpd_asym_05-08_t2w.nii",
+        "nihpd_asym_08-11_t2w.nii",
+        "nihpd_asym_11-14_t2w.nii",
+        "nihpd_asym_14-17_t2w.nii",
+        "nihpd_asym_17-21_t2w.nii",
+        "nihpd_asym_33-44_t2w.nii",
+        "nihpd_asym_44-60_t2w.nii",
+        "nihpd_asym_04.5-08.5_t2w.nii",
+        "nihpd_asym_07.5-13.5_t2w.nii",
+        "nihpd_asym_13.0-18.5_t2w.nii",
+        "mni_icbm152_t2_tal_nlin_asym_55_ext.nii"
+
+      ],
+      "type": "string"
+    },
+    "transformationModel": {
+      "default": "SyN",
+      "description": "Type of transformation model used for registration (EL = elastic transformation model, SY = SyN with time, arbitrary number of time points, S2 =  SyN with time, optimized for 2 time points, GR = greedy SyN, EX = exponential, DD = diffeomorphic demons style exponential, mapping, RI = purely rigid, RA = Affine rigid)",
+      "enum": [
+        "BSplineSyN",
+        "SyN",
+        "TimeVaryingBSplineVelocityField",
+        "TimeVaryingVelocityField"
+      ],
+      "type": "string"
+    },
+    "transformationType": {
+      "default": "s",
+      "description": "Transform type (antsRegistrationSyN.sh), r: rigid, a: rigid + affine, s: rigid + affine + deformable syn, b: rigid + affine + deformable b-spline syn",
+      "enum": [
+        "a",
+        "b",
+        "r",
+        "s"
+      ],
+      "type": "string"
+    }
+  },
+  "custom": {
+    "analysis-level": "participant",
+    "flywheel": {
+      "classification": {
+        "components": [
+          "ANTs"
         ],
-        "license": {
-            "dependencies": [
-                {
-                    "name": "Other",
-                    "url": "https://github.com/ANTsX/ANTs/blob/v2.2.0/COPYING.txt"
-                }
-            ],
-            "main": {
-                "name": "",
-                "url": ""
-            },
-            "non-commercial-use-only": false
+        "keywords": [
+          "registration",
+          "template"
+        ],
+        "modality": [
+          "MR"
+        ],
+        "type": [
+          "nifti"
+        ]
+      },
+      "suite": "UNITY Apps"
+    },
+    "gear-builder": {
+      "category": "analysis",
+      "image": "flywheel/mrr:0.0.1"
+    },
+    "kcl-app-binary": "app/ciso-gear.sh",
+    "kcl-app-modalities": [
+      "anat"
+    ],
+    "license": {
+      "dependencies": [
+        {
+          "name": "Other",
+          "url": "https://github.com/ANTsX/ANTs/blob/v2.2.0/COPYING.txt"
         }
+      ],
+      "main": {
+        "name": "",
+        "url": ""
+      },
+      "non-commercial-use-only": false
+    }
+  },
+  "description": " WARNING!! Development version, testing effect of resampling. Please use last deployed version. ANTs based gear that runs antsMultivariateTemplateConstruction2.sh script to generate an isotropic image by co-registering a set of multiplanar input images.",
+  "environment": {
+    "ANTSPATH": "/opt/ants/bin/",
+    "CONDA_DIR": "/opt/conda",
+    "FLYWHEEL": "/flywheel/v0",
+    "FSL_CONDA_CHANNEL": "https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/public",
+    "FSLDIR": "/opt/conda",
+    "GPG_KEY": "E3FF2839C048B25C084DEBE9B26995E310250568",
+    "LANG": "C.UTF-8",
+    "PATH": "/opt/conda/bin:/opt/conda/bin:/opt/ants/bin/:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+    "PYTHON_GET_PIP_SHA256": "fa6f3fb93cce234cd4e8dd2beb54a51ab9c247653b52855a48dd44e6b21ff28b",
+    "PYTHON_GET_PIP_URL": "https://github.com/pypa/get-pip/raw/c20b0cfd643cd4a19246ccf204e2997af70f6b21/public/get-pip.py",
+    "PYTHON_PIP_VERSION": "21.2.3",
+    "PYTHON_VERSION": "3.8.11",
+    "PWD": "/flywheel/v0"
+  },
+  "inputs": {
+    "api-key": {
+      "base": "api-key",
+      "read-only": true
     },
-    "description": "ANTs based gear that runs antsMultivariateTemplateConstruction2.sh script to generate an isotropic image by co-registering a set of multiplanar input images.",
-    "environment": {
-        "ANTSPATH": "/opt/ants/bin/",
-        "CONDA_DIR": "/opt/conda",
-        "FLYWHEEL": "/flywheel/v0",
-        "FSL_CONDA_CHANNEL": "https://fsl.fmrib.ox.ac.uk/fsldownloads/fslconda/public",
-        "FSLDIR": "/opt/conda",
-        "GPG_KEY": "E3FF2839C048B25C084DEBE9B26995E310250568",
-        "LANG": "C.UTF-8",
-        "PATH": "/opt/conda/bin:/opt/conda/bin:/opt/ants/bin/:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
-        "PYTHON_GET_PIP_SHA256": "fa6f3fb93cce234cd4e8dd2beb54a51ab9c247653b52855a48dd44e6b21ff28b",
-        "PYTHON_GET_PIP_URL": "https://github.com/pypa/get-pip/raw/c20b0cfd643cd4a19246ccf204e2997af70f6b21/public/get-pip.py",
-        "PYTHON_PIP_VERSION": "21.2.3",
-        "PYTHON_VERSION": "3.8.11"
+    "axi": {
+      "base": "file",
+      "optional": false,
+      "description": "Axial plane acquisition"
     },
-    "inputs": {
-        "api-key": {
-            "base": "api-key",
-            "read-only": true
-        },
-        "axi": {
-            "base": "file",
-            "optional": false,
-            "description": "Axial plane acquisition"
-        },
-        "cor": {
-            "base": "file",
-            "description": "Coronal plane acquisition",
-            "optional": true
-        },
-        "sag": {
-            "base": "file",
-            "description": "Sagital plane acquisition",
-            "optional": true
-        }
+    "cor": {
+      "base": "file",
+      "description": "Coronal plane acquisition",
+      "optional": true
     },
-    "license": "MIT",
-    "label": "Hyperfine: generate isotropic image from orthogonal acquisition planes",
-    "maintainer": "Niall Bourke <niall.bourke@kcl.ac.uk>",
-    "name": "ciso",
-    "url": "https://github.com/ANTsX/ANTs",
-    "source": "http://www.ncbi.nlm.nih.gov/pubmed/20851191",
-    "version": "0.2.6"
+    "sag": {
+      "base": "file",
+      "description": "Sagital plane acquisition",
+      "optional": true
+    }
+  },
+  "license": "MIT",
+  "label": "BETA MRR: multi-resolution registration",
+  "maintainer": "Niall Bourke <niall.bourke@kcl.ac.uk>",
+  "name": "mrr",
+  "url": "https://github.com/ANTsX/ANTs",
+  "source": "http://www.ncbi.nlm.nih.gov/pubmed/20851191",
+  "version": "0.0.1"
 }
