@@ -1,4 +1,13 @@
 # Changelog
+
+29/02/2024
+MRR 
+- changed back to 1.5 resampling
+- initial rigid registration to template
+- alterations to the ants flags
+- included subject in output file name
+
+
 28/03/2023
 Add in new templates
 

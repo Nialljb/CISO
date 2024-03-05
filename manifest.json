@@ -35,7 +35,7 @@
       "type": "boolean"
     },
     "prefix": {
-      "default": "isotropicReconstruction",
+      "default": "T2w_mrr",
       "description": "A prefix that is prepended to all output files.",
       "type": "string"
     },
@@ -83,7 +83,6 @@
         "nihpd_asym_07.5-13.5_t2w.nii",
         "nihpd_asym_13.0-18.5_t2w.nii",
         "mni_icbm152_t2_tal_nlin_asym_55_ext.nii"
-
       ],
       "type": "string"
     },
@@ -132,7 +131,7 @@
     },
     "gear-builder": {
       "category": "analysis",
-      "image": "flywheel/mrr:0.0.1"
+      "image": "flywheel/mrr:0.0.9"
     },
     "kcl-app-binary": "app/ciso-gear.sh",
     "kcl-app-modalities": [
@@ -152,7 +151,7 @@
       "non-commercial-use-only": false
     }
   },
-  "description": " WARNING!! Development version, testing effect of resampling. Please use last deployed version. ANTs based gear that runs antsMultivariateTemplateConstruction2.sh script to generate an isotropic image by co-registering a set of multiplanar input images.",
+  "description": " ANTs based gear that runs antsMultivariateTemplateConstruction2.sh script to generate an isotropic image by co-registering a set of multiplanar input images.",
   "environment": {
     "ANTSPATH": "/opt/ants/bin/",
     "CONDA_DIR": "/opt/conda",
@@ -190,10 +189,10 @@
     }
   },
   "license": "MIT",
-  "label": "BETA MRR: multi-resolution registration",
+  "label": "MRR: multi-resolution registration",
   "maintainer": "Niall Bourke <niall.bourke@kcl.ac.uk>",
   "name": "mrr",
   "url": "https://github.com/ANTsX/ANTs",
   "source": "http://www.ncbi.nlm.nih.gov/pubmed/20851191",
-  "version": "0.0.1"
+  "version": "0.0.9"
 }
