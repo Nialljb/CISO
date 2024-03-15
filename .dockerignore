@@ -10,7 +10,6 @@
 !utils
 !.pre-commit-config.yaml
 !.env
-!.git
 !README.md
 !requirements.txt
 
