@@ -32,7 +32,7 @@ def main(context: GearToolkitContext) -> None:
     pixdim = pixSize()
 
     # Main event
-    command = "/flywheel/v0/app/ciso-gear.sh" + " " + subject_label # + str(pixdim)
+    command = "/flywheel/v0/app/ciso-gear.sh" + " " + subject_label  + " " + session_label # + str(pixdim)
     print(command)
     exec_command(
     command,

@@ -1,5 +1,9 @@
 # Changelog
 
+08/07/2024
+"version": "0.1.0"
+- changed output to match BIDS format
+
 29/02/2024
 MRR 
 - changed back to 1.5 resampling

@@ -16,6 +16,7 @@ work=/flywheel/v0/work
 mkdir -p ${work}
 
 sub=${1}
+ses=${2}
 
 ##############################################################################
 
@@ -207,12 +208,11 @@ else
   fi
 fi
 
-
 # Check isotantsMultivariateTemplateConstruction2.sh completed & clean up output
 if [[ -e $work/${prefix}template0.nii.gz ]]; then
     echo "Isotropic image generated from othogonal aquisitions"
     echo "Cleaning up..."
-    mv $work/${prefix}template0.nii.gz /flywheel/v0/output/${sub}_${prefix}.nii.gz
+    mv $work/${prefix}template0.nii.gz /flywheel/v0/output/sub-${sub}_ses-${ses}_rec-${prefix}.nii.gz
     mv $work/reg_*_Warped.nii.gz /flywheel/v0/output/
 else
     echo "${CONTAINER} Template not generated!"

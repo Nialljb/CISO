@@ -53,14 +53,4 @@ def parse_config(
         findAge(file_obj)
 
 
-
-
-
-
-
-
-
-
-
-
     return target_template
