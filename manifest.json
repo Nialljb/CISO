@@ -131,7 +131,7 @@
     },
     "gear-builder": {
       "category": "analysis",
-      "image": "flywheel/mrr:0.1.0"
+      "image": "flywheel/mrr:0.1.2"
     },
     "kcl-app-binary": "app/ciso-gear.sh",
     "kcl-app-modalities": [
@@ -194,5 +194,5 @@
   "name": "mrr",
   "url": "https://github.com/ANTsX/ANTs",
   "source": "http://www.ncbi.nlm.nih.gov/pubmed/20851191",
-  "version": "0.1.0"
+  "version": "0.1.2"
 }

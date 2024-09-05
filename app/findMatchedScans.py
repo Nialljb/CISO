@@ -46,13 +46,14 @@ def find_files():
     if speed == 'Fast':
         # get the acquisition from the session
         for acq in session_container.acquisitions.iter():
-            if 'T2' in acq.label: # restrict to T2 acquisitions
+            if 'T2' in acq.label and 'QC-passed' in acq.tags or 'QC-uncertain' in acq.tags: # restrict to T2 acquisitions
+                print("acq is : ", acq.label)
+                print("acq tags are : ", acq.tags)
                 for file in acq.files: # get the files in the acquisition
                     # Screen file object information & download the desired file
                     if file['type'] == 'nifti' and 'T2' in file.name and 'Fast' in file.name:
                         if 'SAG' in file.name:
                             sag = file
-                            print("sag is : ", sag.name)
                             download_dir = ('/flywheel/v0/input/sag')
                             if not os.path.exists(download_dir):
                                 os.mkdir(download_dir)
@@ -61,7 +62,6 @@ def find_files():
 
                         elif 'COR' in file.name:
                             cor = file
-                            print("cor is : ", cor.name) 
                             download_dir = ('/flywheel/v0/input/cor')
                             if not os.path.exists(download_dir):
                                 os.mkdir(download_dir)
@@ -71,13 +71,14 @@ def find_files():
     elif speed == 'standard':
         # get the acquisition from the session
         for acq in session_container.acquisitions.iter():
-            if 'T2' in acq.label: # restrict to T2 acquisitions
+            if 'T2' in acq.label and 'QC-passed' in acq.tags or 'QC-uncertain' in acq.tags: # restrict to T2 acquisitions
+                print("acq is : ", acq.label)
+                print("acq tags are : ", acq.tags)
                 for file in acq.files: # get the files in the acquisition
                     # Screen file object information & download the desired file
                     if file['type'] == 'nifti' and 'T2' in file.name and 'Fast' not in file.name:
                         if 'SAG' in file.name:
                             sag = file
-                            print("sag is : ", sag.name)
                             download_dir = ('/flywheel/v0/input/sag')
                             if not os.path.exists(download_dir):
                                 os.mkdir(download_dir)
@@ -86,7 +87,6 @@ def find_files():
 
                         elif 'COR' in file.name:
                             cor = file
-                            print("cor is : ", cor.name) 
                             download_dir = ('/flywheel/v0/input/cor')
                             if not os.path.exists(download_dir):
                                 os.mkdir(download_dir)
