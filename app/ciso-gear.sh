@@ -1,5 +1,5 @@
 #!/bin/bash
-# 
+#
 # Run script for flywheel/ciso Gear.
 #
 # Authorship: Niall bourke

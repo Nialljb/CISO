@@ -19,6 +19,9 @@ def find_files():
     api_key = (config['inputs']['api-key']['key'])
     fw = flywheel.Client(api_key=api_key)
 
+    print("API key is : ", api_key)
+    print(dir(fw))
+
     # Get the parent id from inputs in config file
     input_container_type = config.get("inputs", {}).get("axi", {}).get("hierarchy", {}).get("type")
     if input_container_type == 'session':
@@ -46,7 +49,7 @@ def find_files():
     if speed == 'Fast':
         # get the acquisition from the session
         for acq in session_container.acquisitions.iter():
-            if 'T2' in acq.label and 'QC-passed' in acq.tags or 'QC-uncertain' in acq.tags: # restrict to T2 acquisitions
+            if 'T2' in acq.label and 'QC-failed' not in acq.tags: # restrict to T2 acquisitions
                 print("acq is : ", acq.label)
                 print("acq tags are : ", acq.tags)
                 for file in acq.files: # get the files in the acquisition
@@ -71,7 +74,7 @@ def find_files():
     elif speed == 'standard':
         # get the acquisition from the session
         for acq in session_container.acquisitions.iter():
-            if 'T2' in acq.label and 'QC-passed' in acq.tags or 'QC-uncertain' in acq.tags: # restrict to T2 acquisitions
+            if 'T2' in acq.label and 'QC-failed' not in acq.tags: # restrict to T2 acquisitions
                 print("acq is : ", acq.label)
                 print("acq tags are : ", acq.tags)
                 for file in acq.files: # get the files in the acquisition
@@ -92,12 +95,3 @@ def find_files():
                                 os.mkdir(download_dir)
                             download_path = download_dir + '/' + cor.name
                             cor.download(download_path)
-                        
-                        # elif 'AXI' in file.name and not 'Segmentation' in file.name and not 'Align' in file.name: # Account for new Hyperfine output
-                        #     axi = file
-                        #     print("axi is : ", axi.name)
-                        #     download_dir = ('/flywheel/v0/input/axi')
-                        #     if not os.path.exists(download_dir):
-                        #         os.mkdir(download_dir)
-                        #     download_path = download_dir + '/' + axi.name
-                        #     axi.download(download_path)

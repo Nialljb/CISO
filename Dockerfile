@@ -27,6 +27,7 @@ ENV FSLDIR="/opt/conda"
 
 # Configure entrypoint
 RUN bash -c 'chmod +rx $FLYWHEEL/run.py' && \
-    bash -c 'chmod +rx $FLYWHEEL/app/ciso-gear.sh' \
-ENTRYPOINT ["python","/flywheel/v0/run.py"] 
+    bash -c 'chmod +wrx $FLYWHEEL/app/ciso-gear.sh'
+    
+ENTRYPOINT ["python3","/flywheel/v0/run.py"] 
 # Flywheel reads the config command over this entrypoint

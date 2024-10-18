@@ -1,8 +1,8 @@
 #!/usr/bin/env bash 
 
 GEAR=ciso
-IMAGE=flywheel/mrr:0.1.1
-LOG=mrr-0.1.1-66d9c853738a353afa4f0fe8
+IMAGE=flywheel/mrr:0.1.2
+LOG=mrr-0.1.2-67123931bfb0305e76e9f542
 
 # Command:
 docker run -it --rm --entrypoint bash\
